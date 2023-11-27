@@ -1,0 +1,32 @@
+---
+description: It turns out that hoverflies may fly hundreds or even thousands of miles—all
+  to help pollinate our flowers and vegetables.
+images:
+- height: 640
+  url: https://i.scdn.co/image/ab6765630000ba8a0af810ea9db75965d02ed3ad
+  width: 640
+- height: 300
+  url: https://i.scdn.co/image/ab67656300005f1f0af810ea9db75965d02ed3ad
+  width: 300
+- height: 64
+  url: https://i.scdn.co/image/ab6765630000f68d0af810ea9db75965d02ed3ad
+  width: 64
+name: These Tiny Pollinators Can Travel Surprisingly Huge Distances
+release_date: '2022-09-07'
+show:
+  description: Leading science and tech journalists dive into a rich world of scientific
+    discovery in this bite-size science variety show. To view all of our archived 
+    material, go to:  www.scientificamerican.com/podcast .
+  images:
+  - height: 640
+    url: https://i.scdn.co/image/ab6765630000ba8a0af810ea9db75965d02ed3ad
+    width: 640
+  - height: 300
+    url: https://i.scdn.co/image/ab67656300005f1f0af810ea9db75965d02ed3ad
+    width: 300
+  - height: 64
+    url: https://i.scdn.co/image/ab6765630000f68d0af810ea9db75965d02ed3ad
+    width: 64
+  name: Science, Quickly
+  publisher: Scientific American
+type: episode

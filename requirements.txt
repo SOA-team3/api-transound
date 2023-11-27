@@ -1,0 +1,16 @@
+lxml
+requests
+bs4
+wget # to download files
+pandas
+
+# Whisper transcribe package
+# git+https://github.com/openai/whisper.git
+
+# Speech_recognition transcribe package
+SpeechRecognition
+googletrans==4.0.0-rc1
+translate
+pydub
+ffmpeg-python
+ffmpeg
