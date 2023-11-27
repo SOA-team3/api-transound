@@ -34,23 +34,23 @@ describe 'Test API routes' do
     end
   end
 
-  describe 'Appraise project folder route' do
-    it 'should be able to appraise a project folder' do
+  describe 'View episode folder route' do
+    it 'should be able to view a episode' do
         TranSound::Service::AddEpisode.new.call(
         episode_type: EPISODE_TYPE, episode_id: EPISODE_ID
       )
 
       get "/api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}"
       _(last_response.status).must_equal 200
-      appraisal = JSON.parse last_response.body
-      _(appraisal.keys.sort).must_equal %w[folder project]
-      _(appraisal['project']['name']).must_equal EPISODE_ID
-      _(appraisal['project']['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
-      _(appraisal['project']['contributors'].count).must_equal 3
-      _(appraisal['folder']['path']).must_equal ''
-      _(appraisal['folder']['subfolders'].count).must_equal 10
-      _(appraisal['folder']['line_count']).must_equal 1450
-      _(appraisal['folder']['base_files'].count).must_equal 2
+      result = JSON.parse last_response.body
+      _(result.keys.sort).must_equal %w[folder project]
+      _(result['project']['name']).must_equal EPISODE_ID
+      _(result['project']['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
+      _(result['project']['contributors'].count).must_equal 3
+      _(result['folder']['path']).must_equal ''
+      _(result['folder']['subfolders'].count).must_equal 10
+      _(result['folder']['line_count']).must_equal 1450
+      _(result['folder']['base_files'].count).must_equal 2
     end
 
     it 'should be able to appraise a project subfolder' do
@@ -60,15 +60,15 @@ describe 'Test API routes' do
 
       get "/api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}/spec"
       _(last_response.status).must_equal 200
-      appraisal = JSON.parse last_response.body
-      _(appraisal.keys.sort).must_equal %w[folder project]
-      _(appraisal['project']['name']).must_equal EPISODE_ID
-      _(appraisal['project']['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
-      _(appraisal['project']['contributors'].count).must_equal 3
-      _(appraisal['folder']['path']).must_equal 'spec'
-      _(appraisal['folder']['subfolders'].count).must_equal 1
-      _(appraisal['folder']['line_count']).must_equal 151
-      _(appraisal['folder']['base_files'].count).must_equal 3
+      result = JSON.parse last_response.body
+      _(result.keys.sort).must_equal %w[folder project]
+      _(result['project']['name']).must_equal EPISODE_ID
+      _(result['project']['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
+      _(result['project']['contributors'].count).must_equal 3
+      _(result['folder']['path']).must_equal 'spec'
+      _(result['folder']['subfolders'].count).must_equal 1
+      _(result['folder']['line_count']).must_equal 151
+      _(result['folder']['base_files'].count).must_equal 3
     end
 
     it 'should be report error for an invalid subfolder' do
@@ -169,15 +169,15 @@ describe 'Test API routes' do
 
       get "/api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}"
       _(last_response.status).must_equal 200
-      appraisal = JSON.parse last_response.body
-      _(appraisal.keys.sort).must_equal %w[folder project]
-      _(appraisal['project']['name']).must_equal EPISODE_ID
-      _(appraisal['project']['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
-      _(appraisal['project']['contributors'].count).must_equal 3
-      _(appraisal['folder']['path']).must_equal ''
-      _(appraisal['folder']['subfolders'].count).must_equal 10
-      _(appraisal['folder']['line_count']).must_equal 1450
-      _(appraisal['folder']['base_files'].count).must_equal 2
+      result = JSON.parse last_response.body
+      _(result.keys.sort).must_equal %w[folder project]
+      _(result['project']['name']).must_equal EPISODE_ID
+      _(result['project']['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
+      _(result['project']['contributors'].count).must_equal 3
+      _(result['folder']['path']).must_equal ''
+      _(result['folder']['subfolders'].count).must_equal 10
+      _(result['folder']['line_count']).must_equal 1450
+      _(result['folder']['base_files'].count).must_equal 2
     end
 
     it 'should be able to appraise a project subfolder' do
@@ -187,15 +187,15 @@ describe 'Test API routes' do
 
       get "/api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}/spec"
       _(last_response.status).must_equal 200
-      appraisal = JSON.parse last_response.body
-      _(appraisal.keys.sort).must_equal %w[folder project]
-      _(appraisal['project']['name']).must_equal EPISODE_ID
-      _(appraisal['project']['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
-      _(appraisal['project']['contributors'].count).must_equal 3
-      _(appraisal['folder']['path']).must_equal 'spec'
-      _(appraisal['folder']['subfolders'].count).must_equal 1
-      _(appraisal['folder']['line_count']).must_equal 151
-      _(appraisal['folder']['base_files'].count).must_equal 3
+      result = JSON.parse last_response.body
+      _(result.keys.sort).must_equal %w[folder project]
+      _(result['project']['name']).must_equal EPISODE_ID
+      _(result['project']['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
+      _(result['project']['contributors'].count).must_equal 3
+      _(result['folder']['path']).must_equal 'spec'
+      _(result['folder']['subfolders'].count).must_equal 1
+      _(result['folder']['line_count']).must_equal 151
+      _(result['folder']['base_files'].count).must_equal 3
     end
 
     it 'should be report error for an invalid subfolder' do
