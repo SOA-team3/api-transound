@@ -8,65 +8,40 @@ module TranSound
     class ViewPodcastInfo
       include Dry::Transaction
 
-      step :ensure_watched_podcast_info
       step :retrieve_remote_podcast_info
 
       private
 
+      NO_POD_ERR = 'Podcast Info not found'
+      DB_ERR = 'Having trouble accessing the database'
+
       # Steps
 
-      def ensure_watched_podcast_info(input)
+      def retrieve_remote_podcast_info(input)
         requested = input[:requested]
         type = requested.type
 
         if type == 'episode'
-          handle_ensure_watched_episode(requested, input)
+          handle_retrieve_remote_episode(requested, input)
         elsif type == 'show'
-          handle_ensure_watched_show(requested, input)
-        end
-      end
-
-      def retrieve_remote_podcast_info(input)
-        request = input[:requested]
-        type = request.type
-
-        if type == 'episode'
-          handle_retrieve_remote_episode(request, input)
-        elsif type == 'show'
-          handle_retrieve_remote_show(request, input)
+          handle_retrieve_remote_show(requested, input)
         end
       rescue StandardError
-        Failure('Having trouble accessing the database')
+        Failure(Response::ApiResult.new(status: :internal_error, message: DB_ERR))
       end
 
-      def handle_ensure_watched_episode(requested, input)
-        if input[:watched_list][:episode_id].include? requested.id
-          Success(input)
-        else
-          Failure('Please first request this episode to be added to your list')
-        end
-      end
-
-      def handle_ensure_watched_show(requested, input)
-        if input[:watched_list][:show_id].include? requested.id
-          Success(input)
-        else
-          Failure('Please first request this show to be added to your list')
-        end
-      end
-
-      def handle_retrieve_remote_episode(request, input)
+      def handle_retrieve_remote_episode(requested, input)
         input[:episode] = Repository::For.klass(Entity::Episode).find_podcast_info(
-          request.id
+          requested.id
         )
-        input[:episode] ? Success(input) : Failure('Episode not found')
+        input[:episode] ? Success(input) : Failure(Response::ApiResult.new(status: :not_found, message: NO_PROJ_ERR))
       end
 
-      def handle_retrieve_remote_show(request, input)
+      def handle_retrieve_remote_show(requested, input)
         input[:show] = Repository::For.klass(Entity::Show).find_podcast_info(
-          request.id
+          requested.id
         )
-        input[:show] ? Success(input) : Failure('Show not found')
+        input[:show] ? Success(input) : Failure(Response::ApiResult.new(status: :not_found, message: NO_PROJ_ERR))
       end
     end
   end

@@ -10,23 +10,13 @@ module TranSound
     class AddPodcastInfo
       include Dry::Transaction
 
-      step :parse_url
       step :find_podcast_info
       step :store_podcast_info
 
       private
 
-      def parse_url(input)
-        puts "add p info: #{input.inspect}"
-        if input.success?
-          @type, id = input.values[:spotify_url].split('/')[-2..]
-          Success(type: @type, id:)
-        else
-          Failure("URL #{input.errors.messages.first}")
-        end
-      end
-
       def find_podcast_info(input)
+        @type = input[:type]
         if @type == 'episode'
           handle_find_episode(input)
         elsif @type == 'show'

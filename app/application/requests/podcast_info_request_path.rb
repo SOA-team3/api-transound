@@ -3,7 +3,7 @@
 module TranSound
   module RouteHelpers
     # Application value for the path of a requested project
-    class PodcastInfoRequestPath
+    class PodcastInfoPath
       def initialize(type, id)
         @type = type
         @id = id
