@@ -5,11 +5,21 @@ require 'logger'
 require 'rack/session'
 require 'roda'
 require 'sequel'
-# require 'yaml'
-# require 'delegate' # needed until Rack 2.3 fixes delegateclass bug
+require 'yaml'
 
 # Get TranSound::Token class
 require_relative '../app/infrastructure/gateways/podcast_api'
+
+# SECRET_PATH = 'config/secrets.yml'
+# CONFIG = YAML.safe_load_file(SECRET_PATH)
+# CLIENT_ID = CONFIG['test']['spotify_Client_ID']
+# CLIENT_SECRET = CONFIG['test']['spotify_Client_secret']
+# puts "CONFIG: #{CONFIG}"
+# puts "CLIENT_SECRET: #{CLIENT_SECRET}"
+
+# Temp ENV handle
+# TEMP_TOKEN_PATH = 'config/temp_token.yml'
+# TEMP_TOKEN_CONFIG = YAML.safe_load_file(TEMP_TOKEN_PATH)
 
 module TranSound
   # Configuration for the App

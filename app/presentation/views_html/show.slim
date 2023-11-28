@@ -1,0 +1,124 @@
+hr
+.container
+    .row
+      .left-sidebar.col-lg-5.d-flex.flex-column.align-items-center.mr-4
+        h2.mt-4
+          span.decoration
+            | Show Information
+          div.center
+            img.show.images[src = show.images alt = "#{show.images}" style="width: 80%; height: auto;margin:10%;border-radius: 50%;"]
+        / .show.type
+        / = show.type.capitalize + ":"
+        div.text-center
+          h3.show.name.mt-4 style="padding-left:20px"
+            = show.name
+        span.show.attribute
+          | Publisher:&nbsp
+          = show.publisher
+        span.show.attribute.p-4
+          | Description:&nbsp
+          = show.description
+        span.episode.attribute 【Show URL】&nbsp
+        a.episode.episode_url href="#{show.show_url}" Click here to visit Spotify Show page-#{show.name}
+
+
+      .right-sidebar.col-lg-6
+        .scrollable-content
+          h2.title_txt
+            i.bi.bi-bookmarks-fill
+            |  Latest Episodes:
+          hr
+
+           div.list-group
+            a.list-group-item.list-group-item-action href="https://open.spotify.com/show/5Vv32KtHB3peVZ8TeacUty" target="_blank"
+              div.row
+                div.col-md-9
+                  div.small.text-gray
+                    | 2023/10/21
+                  div
+                    | Ep01
+                  div
+                    | description1
+                div.col-md-3.d-flex.flex-column.align-items-end.justify-content-center
+                  i.bi.bi-chevron-right
+            a.list-group-item.list-group-item-action href="https://open.spotify.com/show/5Vv32KtHB3peVZ8TeacUty" target="_blank"
+              div.row
+                div.col-md-9
+                  div.small.text-gray
+                    | 2023/10/20
+                  div
+                    | Ep02
+                  div
+                    | description2
+                div.col-md-3.d-flex.flex-column.align-items-end.justify-content-center
+                  i.bi.bi-chevron-right
+            a.list-group-item.list-group-item-action href="https://open.spotify.com/show/5Vv32KtHB3peVZ8TeacUty" target="_blank"
+                div.row
+                  div.col-md-9
+                    div.small.text-gray
+                      | 2023/10/19
+                    div
+                      | Ep03
+                    div
+                      | description3
+                  div.col-md-3.d-flex.flex-column.align-items-end.justify-content-center
+                    i.bi.bi-chevron-right
+            a.list-group-item.list-group-item-action href="https://open.spotify.com/show/5Vv32KtHB3peVZ8TeacUty" target="_blank"
+                div.row
+                  div.col-md-9
+                    div.small.text-gray
+                      | 2023/10/19
+                    div
+                      | Ep03
+                    div
+                      | description3
+                  div.col-md-3.d-flex.flex-column.align-items-end.justify-content-center
+                    i.bi.bi-chevron-right
+            a.list-group-item.list-group-item-action href="https://open.spotify.com/show/5Vv32KtHB3peVZ8TeacUty" target="_blank"
+                div.row
+                  div.col-md-9
+                    div.small.text-gray
+                      | 2023/10/19
+                    div
+                      | Ep03
+                    div
+                      | description3
+                  div.col-md-3.d-flex.flex-column.align-items-end.justify-content-center
+                    i.bi.bi-chevron-right
+            button.btn.btn-primary.mt-4 Click to Load more...
+
+/to make the group list-items none-duplicated
+/ - items = [
+/   { date: "2023/10/21", title: "Ep01", description: "description1" },
+/   { date: "2023/10/20", title: "Ep02", description: "description2" },
+/   { date: "2023/10/19", title: "Ep03", description: "description3" }
+/ ]
+
+/ div.list-group
+/   - items.each do |item|
+/     - title_id = "title_#{item[:title]}"
+/     - description_id = "description_#{item[:title]}"
+
+/     a.list-group-item.list-group-item-action href="#"
+/       div.row
+/         div.col-md-9
+/           div
+/             = item[:date]
+/           div
+/             span#title_id = item[:title]
+/           div
+/             = item[:description]
+/         div.col-md-3.d-flex.flex-column.align-items-end.justify-content-center
+/           i.bi.bi-chevron-right
+
+
+  / .row.top-buffer
+  / .col-lg-1.col-md-2.col-sm-2
+  /   span.show.attribute Top-5 Recommedation:
+  / .col-lg-11.col-md-10.col-sm-6
+  /   .row
+  /     - items = show.episodes['items'][0..4]
+  /     - items.each_with_index do |episode, index|
+  /       - episode_id = episode['href'].split('/')[-1]
+  /       .col-sm-12
+  /         a.show.items href="/podcast_info/episode/#{episode_id}" #{index+1}. #{episode['name']}

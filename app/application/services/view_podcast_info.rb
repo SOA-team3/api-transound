@@ -27,13 +27,13 @@ module TranSound
       end
 
       def retrieve_remote_podcast_info(input)
-        requested = input[:requested]
-        type = requested.type
+        request = input[:requested]
+        type = request.type
 
         if type == 'episode'
-          handle_retrieve_remote_episode(requested, input)
+          handle_retrieve_remote_episode(request, input)
         elsif type == 'show'
-          handle_retrieve_remote_show(requested, input)
+          handle_retrieve_remote_show(request, input)
         end
       rescue StandardError
         Failure('Having trouble accessing the database')
@@ -55,16 +55,16 @@ module TranSound
         end
       end
 
-      def handle_retrieve_remote_episode(requested, input)
+      def handle_retrieve_remote_episode(request, input)
         input[:episode] = Repository::For.klass(Entity::Episode).find_podcast_info(
-          requested.id
+          request.id
         )
         input[:episode] ? Success(input) : Failure('Episode not found')
       end
 
-      def handle_retrieve_remote_show(requested, input)
+      def handle_retrieve_remote_show(request, input)
         input[:show] = Repository::For.klass(Entity::Show).find_podcast_info(
-          requested.id
+          request.id
         )
         input[:show] ? Success(input) : Failure('Show not found')
       end
