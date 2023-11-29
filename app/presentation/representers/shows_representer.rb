@@ -23,7 +23,7 @@ module TranSound
       property :show_url
 
       link :self do
-        "#{ENV['API_HOST']}/api/v1/shows/#{show_type}/#{show_id}"
+        "#{ENV.fetch('API_HOST', nil)}/api/v1/shows/#{show_type}/#{show_id}"
       end
 
       private

@@ -25,9 +25,9 @@ module TranSound
       property :episode_mp3_url
       property :transcript
       property :translation
-     
+
       link :self do
-        "#{ENV['API_HOST']}/api/v1/episodes/#{episode_type}/#{episode_id}"
+        "#{ENV.fetch('API_HOST', nil)}/api/v1/episodes/#{episode_type}/#{episode_id}"
       end
 
       private

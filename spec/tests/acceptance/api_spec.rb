@@ -36,35 +36,34 @@ describe 'Test API routes' do
 
   describe 'View episode folder route' do
     it 'should be able to view a episode' do
-        TranSound::Service::AddEpisode.new.call(
-        episode_type: EPISODE_TYPE, episode_id: EPISODE_ID
+      TranSound::Service::AddEpisode.new.call(
+        episode_type: EPISODE_TYPE, episode_id: EPISODE_ID, market: MARKET
       )
-
-      get "/api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}"
+      get "/api/v1/podcast_info/#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}"
       _(last_response.status).must_equal 200
       result = JSON.parse last_response.body
-      _(result.keys.sort).must_equal %w[folder project]
-      _(result['project']['name']).must_equal EPISODE_ID
-      _(result['project']['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
-      _(result['project']['contributors'].count).must_equal 3
+      _(result.keys.sort).must_equal %w[folder episode]
+      _(result['episode']['origin_id']).must_equal EPISODE_ID
+      _(result['episode']['type']).must_equal EPISODE_TYPE
+      _(result['episode']['market']).must_equal MARKET
       _(result['folder']['path']).must_equal ''
       _(result['folder']['subfolders'].count).must_equal 10
       _(result['folder']['line_count']).must_equal 1450
       _(result['folder']['base_files'].count).must_equal 2
     end
 
-    it 'should be able to appraise a project subfolder' do
-      TranSound::Service::AddProject.new.call(
-        owner_name: EPISODE_TYPE, EPISODE_ID: EPISODE_ID
+    it 'should be able to view a episode subfolder' do
+      TranSound::Service::AddEpisode.new.call(
+        episode_type: EPISODE_TYPE, episode_id: EPISODE_ID, market: MARKET
       )
 
-      get "/api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}/spec"
+      get "/api/v1/episodes/#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}/spec"
       _(last_response.status).must_equal 200
       result = JSON.parse last_response.body
-      _(result.keys.sort).must_equal %w[folder project]
-      _(result['project']['name']).must_equal EPISODE_ID
-      _(result['project']['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
-      _(result['project']['contributors'].count).must_equal 3
+      _(result.keys.sort).must_equal %w[folder episode]
+      _(result['episode']['name']).must_equal EPISODE_ID
+      _(result['episode']['type']).must_equal EPISODE_TYPE
+      _(result['episode']['market']).must_equal MARKET
       _(result['folder']['path']).must_equal 'spec'
       _(result['folder']['subfolders'].count).must_equal 1
       _(result['folder']['line_count']).must_equal 151
@@ -72,44 +71,45 @@ describe 'Test API routes' do
     end
 
     it 'should be report error for an invalid subfolder' do
-      TranSound::Service::AddProject.new.call(
-        owner_name: EPISODE_TYPE, EPISODE_ID: EPISODE_ID
+      TranSound::Service::AddEpisode.new.call(
+        episode_type: EPISODE_TYPE, episode_id: EPISODE_ID, market: MARKET
       )
 
-      get "/api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}/foobar"
+      get "/api/v1/episodes/#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}/foobar"
       _(last_response.status).must_equal 404
       _(JSON.parse(last_response.body)['status']).must_include 'not'
     end
 
-    it 'should be report error for an invalid project' do
-      TranSound::Service::AddProject.new.call(
-        owner_name: '0u9awfh4', EPISODE_ID: 'q03g49sdflkj'
+    it 'should be report error for an invalid episode' do
+      TranSound::Service::AddEpisode.new.call(
+        episode_type: 'episodes', EPISODE_ID: '2zplNaMpre0ASbFJV7OSSq'
       )
 
-      get "/api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}/foobar"
+      get "/api/v1/episodes/#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}/foobar"
       _(last_response.status).must_equal 404
       _(JSON.parse(last_response.body)['status']).must_include 'not'
     end
   end
 
-  describe 'Add projects route' do
-    it 'should be able to add a project' do
-      post "api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}"
+  describe 'Add episodes route' do
+    it 'should be able to add a episode' do
+      post "api/v1/episodes/#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}"
 
       _(last_response.status).must_equal 201
 
-      project = JSON.parse last_response.body
-      _(project['name']).must_equal EPISODE_ID
-      _(project['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
+      episode = JSON.parse last_response.body
+      _(episode['origin_id']).must_equal EPISODE_ID
+      _(episode['type']).must_equal EPISODE_TYPE
+      _(episode['market']).must_equal MARKET
 
-      proj = TranSound::Representer::Project.new(
+      episode = TranSound::Representer::Episode.new(
         TranSound::Representer::OpenStructWithLinks.new
       ).from_json last_response.body
-      _(proj.links['self'].href).must_include 'http'
+      _(episode.links['self'].href).must_include 'http'
     end
 
-    it 'should report error for invalid projects' do
-      post 'api/v1/projects/0u9awfh4/q03g49sdflkj'
+    it 'should report error for invalid episodes' do
+      post 'api/v1/episodes/2zplNaMpre0ASbFJV7OSSq/market=TW'
 
       _(last_response.status).must_equal 404
 
@@ -118,42 +118,42 @@ describe 'Test API routes' do
     end
   end
 
-  describe 'Get projects list' do
-    it 'should successfully return project lists' do
-      TranSound::Service::AddProject.new.call(
-        owner_name: EPISODE_TYPE, EPISODE_ID: EPISODE_ID
+  describe 'Get episodes list' do
+    it 'should successfully return episode lists' do
+      TranSound::Service::AddEpisode.new.call(
+        episode_type: EPISODE_TYPE, episode_id: EPISODE_ID, market: MARKET
       )
 
-      list = ["#{EPISODE_TYPE}/#{EPISODE_ID}"]
-      encoded_list = TranSound::Request::EncodedProjectList.to_encoded(list)
+      list = ["#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}"]
+      encoded_list = TranSound::Request::EncodedEpisodeList.to_encoded(list)
 
-      get "/api/v1/projects?list=#{encoded_list}"
+      get "/api/v1/episodes?list=#{encoded_list}"
       _(last_response.status).must_equal 200
 
       response = JSON.parse(last_response.body)
-      projects = response['projects']
-      _(projects.count).must_equal 1
-      project = projects.first
-      _(project['name']).must_equal EPISODE_ID
-      _(project['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
-      _(project['contributors'].count).must_equal 3
+      episodes = response['episodes']
+      _(episodes.count).must_equal 1
+      episode = episodes.first
+      _(episode['origin_id']).must_equal EPISODE_ID
+      _(episode['type']).must_equal EPISODE_TYPE
+      _(episode['market']).must_equal MARKET
     end
 
     it 'should return empty lists if none found' do
       list = ['djsafildafs;d/239eidj-fdjs']
-      encoded_list = TranSound::Request::EncodedProjectList.to_encoded(list)
+      encoded_list = TranSound::Request::EncodedEpisodeList.to_encoded(list)
 
-      get "/api/v1/projects?list=#{encoded_list}"
+      get "/api/v1/episodes?list=#{encoded_list}"
       _(last_response.status).must_equal 200
 
       response = JSON.parse(last_response.body)
-      projects = response['projects']
-      _(projects).must_be_kind_of Array
-      _(projects.count).must_equal 0
+      episodes = response['episodes']
+      _(episodes).must_be_kind_of Array
+      _(episodes.count).must_equal 0
     end
 
     it 'should return error if not list provided' do
-      get '/api/v1/projects'
+      get '/api/v1/episodes'
       _(last_response.status).must_equal 400
 
       response = JSON.parse(last_response.body)
@@ -161,37 +161,36 @@ describe 'Test API routes' do
     end
   end
 
-  describe 'Appraise project folder route' do
-    it 'should be able to appraise a project folder' do
-      TranSound::Service::AddProject.new.call(
-        owner_name: EPISODE_TYPE, EPISODE_ID: EPISODE_ID
+  describe 'View show folder route' do
+    it 'should be able to view a show' do
+      TranSound::Service::AddShow.new.call(
+        show_type: SHOW_TYPE, show_id: SHOW_ID, market: MARKET
       )
-
-      get "/api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}"
+      get "/api/v1/podcast_info/#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}"
       _(last_response.status).must_equal 200
       result = JSON.parse last_response.body
-      _(result.keys.sort).must_equal %w[folder project]
-      _(result['project']['name']).must_equal EPISODE_ID
-      _(result['project']['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
-      _(result['project']['contributors'].count).must_equal 3
+      _(result.keys.sort).must_equal %w[folder show]
+      _(result['show']['origin_id']).must_equal SHOW_ID
+      _(result['show']['type']).must_equal SHOW_TYPE
+      _(result['show']['market']).must_equal MARKET
       _(result['folder']['path']).must_equal ''
       _(result['folder']['subfolders'].count).must_equal 10
       _(result['folder']['line_count']).must_equal 1450
       _(result['folder']['base_files'].count).must_equal 2
     end
 
-    it 'should be able to appraise a project subfolder' do
-      TranSound::Service::AddProject.new.call(
-        owner_name: EPISODE_TYPE, EPISODE_ID: EPISODE_ID
+    it 'should be able to view a show subfolder' do
+      TranSound::Service::AddShow.new.call(
+        show_type: SHOW_TYPE, show_id: SHOW_ID, market: MARKET
       )
 
-      get "/api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}/spec"
+      get "/api/v1/shows/#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}/spec"
       _(last_response.status).must_equal 200
       result = JSON.parse last_response.body
-      _(result.keys.sort).must_equal %w[folder project]
-      _(result['project']['name']).must_equal EPISODE_ID
-      _(result['project']['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
-      _(result['project']['contributors'].count).must_equal 3
+      _(result.keys.sort).must_equal %w[folder show]
+      _(result['show']['name']).must_equal SHOW_ID
+      _(result['show']['type']).must_equal SHOW_TYPE
+      _(result['show']['market']).must_equal MARKET
       _(result['folder']['path']).must_equal 'spec'
       _(result['folder']['subfolders'].count).must_equal 1
       _(result['folder']['line_count']).must_equal 151
@@ -199,44 +198,45 @@ describe 'Test API routes' do
     end
 
     it 'should be report error for an invalid subfolder' do
-      TranSound::Service::AddProject.new.call(
-        owner_name: EPISODE_TYPE, EPISODE_ID: EPISODE_ID
+      TranSound::Service::AddShow.new.call(
+        show_type: SHOW_TYPE, show_id: SHOW_ID, market: MARKET
       )
 
-      get "/api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}/foobar"
+      get "/api/v1/shows/#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}/foobar"
       _(last_response.status).must_equal 404
       _(JSON.parse(last_response.body)['status']).must_include 'not'
     end
 
-    it 'should be report error for an invalid project' do
-      TranSound::Service::AddProject.new.call(
-        owner_name: '0u9awfh4', EPISODE_ID: 'q03g49sdflkj'
+    it 'should be report error for an invalid show' do
+      TranSound::Service::AddShow.new.call(
+        SHOW_type: 'shows', SHOW_ID: '5Vv32KtHB3peVZ8TeacUty'
       )
 
-      get "/api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}/foobar"
+      get "/api/v1/shows/#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}/foobar"
       _(last_response.status).must_equal 404
       _(JSON.parse(last_response.body)['status']).must_include 'not'
     end
   end
 
-  describe 'Add projects route' do
-    it 'should be able to add a project' do
-      post "api/v1/projects/#{EPISODE_TYPE}/#{EPISODE_ID}"
+  describe 'Add shows route' do
+    it 'should be able to add a show' do
+      post "api/v1/shows/#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}"
 
       _(last_response.status).must_equal 201
 
-      project = JSON.parse last_response.body
-      _(project['name']).must_equal EPISODE_ID
-      _(project['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
+      show = JSON.parse last_response.body
+      _(show['origin_id']).must_equal SHOW_ID
+      _(show['type']).must_equal SHOW_TYPE
+      _(show['market']).must_equal MARKET
 
-      proj = TranSound::Representer::Project.new(
+      show = TranSound::Representer::SHOW.new(
         TranSound::Representer::OpenStructWithLinks.new
       ).from_json last_response.body
-      _(proj.links['self'].href).must_include 'http'
+      _(show.links['self'].href).must_include 'http'
     end
 
-    it 'should report error for invalid projects' do
-      post 'api/v1/projects/0u9awfh4/q03g49sdflkj'
+    it 'should report error for invalid shows' do
+      post 'api/v1/shows/5Vv32KtHB3peVZ8TeacUty/market=TW'
 
       _(last_response.status).must_equal 404
 
@@ -245,47 +245,46 @@ describe 'Test API routes' do
     end
   end
 
-  describe 'Get projects list' do
-    it 'should successfully return project lists' do
-      TranSound::Service::AddProject.new.call(
-        owner_name: EPISODE_TYPE, EPISODE_ID: EPISODE_ID
+  describe 'Get shows list' do
+    it 'should successfully return show lists' do
+      TranSound::Service::AddShow.new.call(
+        show_type: SHOW_TYPE, show_id: SHOW_ID, market: MARKET
       )
 
-      list = ["#{EPISODE_TYPE}/#{EPISODE_ID}"]
-      encoded_list = TranSound::Request::EncodedProjectList.to_encoded(list)
+      list = ["#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}"]
+      encoded_list = TranSound::Request::EncodedShowList.to_encoded(list)
 
-      get "/api/v1/projects?list=#{encoded_list}"
+      get "/api/v1/shows?list=#{encoded_list}"
       _(last_response.status).must_equal 200
 
       response = JSON.parse(last_response.body)
-      projects = response['projects']
-      _(projects.count).must_equal 1
-      project = projects.first
-      _(project['name']).must_equal EPISODE_ID
-      _(project['owner']['EPISODE_TYPE']).must_equal EPISODE_TYPE
-      _(project['contributors'].count).must_equal 3
+      shows = response['shows']
+      _(shows.count).must_equal 1
+      show = shows.first
+      _(show['origin_id']).must_equal SHOW_ID
+      _(show['type']).must_equal SHOW_TYPE
+      _(show['market']).must_equal MARKET
     end
 
     it 'should return empty lists if none found' do
       list = ['djsafildafs;d/239eidj-fdjs']
-      encoded_list = TranSound::Request::EncodedProjectList.to_encoded(list)
+      encoded_list = TranSound::Request::EncodedShowList.to_encoded(list)
 
-      get "/api/v1/projects?list=#{encoded_list}"
+      get "/api/v1/shows?list=#{encoded_list}"
       _(last_response.status).must_equal 200
 
       response = JSON.parse(last_response.body)
-      projects = response['projects']
-      _(projects).must_be_kind_of Array
-      _(projects.count).must_equal 0
+      shows = response['shows']
+      _(shows).must_be_kind_of Array
+      _(shows.count).must_equal 0
     end
 
     it 'should return error if not list provided' do
-      get '/api/v1/projects'
+      get '/api/v1/shows'
       _(last_response.status).must_equal 400
 
       response = JSON.parse(last_response.body)
       _(response['message']).must_include 'list'
     end
   end
-
 end
