@@ -5,7 +5,6 @@ require 'roda'
 module TranSound
   # Application inherits from Roda
   class App < Roda
-    include RouteHelpers
 
     plugin :halt
     plugin :flash
@@ -14,7 +13,6 @@ module TranSound
     # use Rack::MethodOverride # allows HTTP verbs beyond GET/POST (e.g., DELETE)
 
     route do |routing|
-      routing.assets # load custom CSS
       response['Content-Type'] = 'application/json'
 
       # GET /
@@ -34,7 +32,7 @@ module TranSound
           routing.on String, String do |type, id|
             # GET /episode/id or /show/id
             routing.get do
-              path_request = PodcastInfoPath.new(
+              path_request = Request::PodcastInfoPath.new(
                 type, id
               )
 

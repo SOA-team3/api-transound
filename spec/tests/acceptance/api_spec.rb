@@ -36,7 +36,7 @@ describe 'Test API routes' do
 
   describe 'View episode folder route' do
     it 'should be able to view a episode' do
-      TranSound::Service::AddEpisode.new.call(
+      TranSound::Service::AddPodcastInfo.new.call(
         episode_type: EPISODE_TYPE, episode_id: EPISODE_ID, market: MARKET
       )
       get "/api/v1/podcast_info/#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}"
@@ -45,34 +45,15 @@ describe 'Test API routes' do
       _(result.keys.sort).must_equal %w[folder episode]
       _(result['episode']['origin_id']).must_equal EPISODE_ID
       _(result['episode']['type']).must_equal EPISODE_TYPE
-      _(result['episode']['market']).must_equal MARKET
-      _(result['folder']['path']).must_equal ''
-      _(result['folder']['subfolders'].count).must_equal 10
-      _(result['folder']['line_count']).must_equal 1450
-      _(result['folder']['base_files'].count).must_equal 2
-    end
-
-    it 'should be able to view a episode subfolder' do
-      TranSound::Service::AddEpisode.new.call(
-        episode_type: EPISODE_TYPE, episode_id: EPISODE_ID, market: MARKET
-      )
-
-      get "/api/v1/episodes/#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}/spec"
-      _(last_response.status).must_equal 200
-      result = JSON.parse last_response.body
-      _(result.keys.sort).must_equal %w[folder episode]
-      _(result['episode']['name']).must_equal EPISODE_ID
-      _(result['episode']['type']).must_equal EPISODE_TYPE
-      _(result['episode']['market']).must_equal MARKET
-      _(result['folder']['path']).must_equal 'spec'
-      _(result['folder']['subfolders'].count).must_equal 1
-      _(result['folder']['line_count']).must_equal 151
-      _(result['folder']['base_files'].count).must_equal 3
+      _(result['episode']['description']).must_equal 'It turns out that hoverflies may fly hundreds or even thousands of miles—all
+      to help pollinate our flowers and vegetables.'
+      _(result['episode']['name']).must_equal 'These Tiny Pollinators Can Travel Surprisingly Huge Distances'
+      _(result['episode']['release_date']).must_equal '2022-09-07'
     end
 
     it 'should be report error for an invalid subfolder' do
-      TranSound::Service::AddEpisode.new.call(
-        episode_type: EPISODE_TYPE, episode_id: EPISODE_ID, market: MARKET
+      TranSound::Service::AddPodcastInfo.new.call(
+        episode_type: EPISODE_TYPE, episode_id: EPISODE_ID
       )
 
       get "/api/v1/episodes/#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}/foobar"
@@ -81,7 +62,7 @@ describe 'Test API routes' do
     end
 
     it 'should be report error for an invalid episode' do
-      TranSound::Service::AddEpisode.new.call(
+      TranSound::Service::AddPodcastInfo.new.call(
         episode_type: 'episodes', EPISODE_ID: '2zplNaMpre0ASbFJV7OSSq'
       )
 
@@ -120,8 +101,8 @@ describe 'Test API routes' do
 
   describe 'Get episodes list' do
     it 'should successfully return episode lists' do
-      TranSound::Service::AddEpisode.new.call(
-        episode_type: EPISODE_TYPE, episode_id: EPISODE_ID, market: MARKET
+      TranSound::Service::AddPodcastInfo.new.call(
+        episode_type: EPISODE_TYPE, episode_id: EPISODE_ID
       )
 
       list = ["#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}"]
@@ -163,43 +144,25 @@ describe 'Test API routes' do
 
   describe 'View show folder route' do
     it 'should be able to view a show' do
-      TranSound::Service::AddShow.new.call(
-        show_type: SHOW_TYPE, show_id: SHOW_ID, market: MARKET
+      TranSound::Service::AddPodcastInfo.new.call(
+        show_type: SHOW_TYPE, show_id: SHOW_ID
       )
-      get "/api/v1/podcast_info/#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}"
+      get "/api/v1/podcast_info/#{SHOW_TYPE}/#{SHOW_ID}?market=TW"
       _(last_response.status).must_equal 200
       result = JSON.parse last_response.body
       _(result.keys.sort).must_equal %w[folder show]
       _(result['show']['origin_id']).must_equal SHOW_ID
       _(result['show']['type']).must_equal SHOW_TYPE
       _(result['show']['market']).must_equal MARKET
-      _(result['folder']['path']).must_equal ''
-      _(result['folder']['subfolders'].count).must_equal 10
-      _(result['folder']['line_count']).must_equal 1450
-      _(result['folder']['base_files'].count).must_equal 2
-    end
-
-    it 'should be able to view a show subfolder' do
-      TranSound::Service::AddShow.new.call(
-        show_type: SHOW_TYPE, show_id: SHOW_ID, market: MARKET
-      )
-
-      get "/api/v1/shows/#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}/spec"
-      _(last_response.status).must_equal 200
-      result = JSON.parse last_response.body
-      _(result.keys.sort).must_equal %w[folder show]
-      _(result['show']['name']).must_equal SHOW_ID
-      _(result['show']['type']).must_equal SHOW_TYPE
-      _(result['show']['market']).must_equal MARKET
-      _(result['folder']['path']).must_equal 'spec'
-      _(result['folder']['subfolders'].count).must_equal 1
-      _(result['folder']['line_count']).must_equal 151
-      _(result['folder']['base_files'].count).must_equal 3
+      _(result['folder']['description']).must_equal 'Kylie跟Ken 用雙語的對話包裝知識，用輕鬆的口吻胡說八道。我們閒聊也談正經事，讓生硬的國際大事變得鬆軟好入口；歡迎你加入這外表看似嘴砲，內容卻異於常人的有料聊天
+      Bailingguo News。'
+      _(result['folder']['name']).must_equal '百靈果 News'
+      _(result['folder']['publisher']).must_equal 'Bailingguo News'
     end
 
     it 'should be report error for an invalid subfolder' do
-      TranSound::Service::AddShow.new.call(
-        show_type: SHOW_TYPE, show_id: SHOW_ID, market: MARKET
+      TranSound::Service::AddPodcastInfo.new.call(
+        show_type: SHOW_TYPE, show_id: SHOW_ID
       )
 
       get "/api/v1/shows/#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}/foobar"
@@ -208,7 +171,7 @@ describe 'Test API routes' do
     end
 
     it 'should be report error for an invalid show' do
-      TranSound::Service::AddShow.new.call(
+      TranSound::Service::AddPodcastInfo.new.call(
         SHOW_type: 'shows', SHOW_ID: '5Vv32KtHB3peVZ8TeacUty'
       )
 
@@ -247,7 +210,7 @@ describe 'Test API routes' do
 
   describe 'Get shows list' do
     it 'should successfully return show lists' do
-      TranSound::Service::AddShow.new.call(
+      TranSound::Service::AddPodcastInfo.new.call(
         show_type: SHOW_TYPE, show_id: SHOW_ID, market: MARKET
       )
 

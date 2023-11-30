@@ -7,45 +7,35 @@ task :default do
   puts `rake -T`
 end
 
-desc 'Run the integration tests'
-task spec: ['spec:default']
-
-namespace :spec do
-  desc 'Run integration tests'
-  Rake::TestTask.new(:default) do |t|
-    t.pattern = 'spec/tests/{integration}/**/*_spec.rb'
-    t.warning = false
-  end
-
-  desc 'Run all tests'
-  Rake::TestTask.new(:all) do |t|
-    t.pattern = 'spec/tests/**/*_spec.rb'
-    t.warning = false
-  end
+desc 'Run unit and integration tests'
+Rake::TestTask.new(:spec) do |t|
+  t.pattern = 'spec/tests/**/*_spec.rb'
+  t.warning = false
 end
 
-desc 'Keep rerunning integration tests upon changes'
+desc 'Keep rerunning unit/integration tests upon changes'
 task :respec do
-  sh "rerun -c 'rake spec' --ignore 'coverage/*'"
+  sh "rerun -c 'rake spec' --ignore 'coverage/*' --ignore 'repostore/*'"
 end
 
-desc 'Run web app'
-task :run do
-  sh 'bundle exec puma'
-end
-
-desc 'Keep rerunning web app upon changes'
+desc 'Run the webserver and application and restart if code changes'
 task :rerun do
-  sh "rerun -c --ignore 'coverage/*' -- bundle exec puma"
+  sh "rerun -c --ignore 'coverage/*' --ignore 'repostore/*' -- bundle exec puma"
 end
 
-desc 'Generates a 64 by secret for Rack::Session'
-task :new_session_secret do
-  require 'base64'
-  # require 'SecureRandom'
-  require 'securerandom'
-  secret = SecureRandom.random_bytes(64).then { Base64.urlsafe_encode64(_1) }
-  puts "SESSION_SECRET: #{secret}"
+desc 'Run web app in default (dev) mode'
+task run: ['run:default']
+
+namespace :run do
+  desc 'Run API in dev mode'
+  task :default do
+    sh 'rerun -c "bundle exec puma -p 9090"'
+  end
+
+  desc 'Run API in test mode'
+  task :test do
+    sh 'RACK_ENV=test bundle exec puma -p 9090'
+  end
 end
 
 namespace :db do
@@ -54,36 +44,61 @@ namespace :db do
     require_relative 'config/environment' # load config info
     require_relative 'spec/helpers/database_helper'
 
-    def app = TranSound::App
+    def app = CodePraise::App
   end
 
   desc 'Run migrations'
-  task migrate: :config do
+  task :migrate => :config do
     Sequel.extension :migration
     puts "Migrating #{app.environment} database to latest"
     Sequel::Migrator.run(app.db, 'db/migrations')
   end
 
   desc 'Wipe records from all tables'
-  task wipe: :config do
+  task :wipe => :config do
     if app.environment == :production
       puts 'Do not damage production database!'
       return
     end
 
     require_app('infrastructure')
+    require_relative 'spec/helpers/database_helper'
     DatabaseHelper.wipe_database
   end
 
   desc 'Delete dev or test database file (set correct RACK_ENV)'
-  task drop: :config do
+  task :drop => :config do
     if app.environment == :production
       puts 'Do not damage production database!'
       return
     end
 
-    FileUtils.rm(TranSound::App.config.DB_FILENAME)
-    puts "Deleted #{TranSound::App.config.DB_FILENAME}"
+    FileUtils.rm(app.config.DB_FILENAME)
+    puts "Deleted #{app.config.DB_FILENAME}"
+  end
+end
+
+namespace :repos do
+  task :config do
+    require_relative 'config/environment' # load config info
+    def app = CodePraise::App
+  end
+
+  desc 'Create director for repo store'
+  task :create => :config do
+    puts `mkdir #{app.config.REPOSTORE_PATH}`
+  end
+
+  desc 'Delete cloned repos in repo store'
+  task :wipe => :config do
+    sh "rm -rf #{app.config.REPOSTORE_PATH}/*/" do |ok, _|
+      puts(ok ? 'Cloned repos deleted' : 'Could not delete cloned repos')
+    end
+  end
+
+  desc 'List cloned repos in repo store'
+  task :list => :config do
+    puts `ls #{app.config.REPOSTORE_PATH}`
   end
 end
 
@@ -114,7 +129,7 @@ namespace :quality do
 
   desc 'code smell detector'
   task :reek do
-    sh 'reek'
+    sh "reek #{only_app}"
   end
 
   desc 'complexiy analysis'
@@ -122,3 +137,4 @@ namespace :quality do
     sh "flog -m #{only_app}"
   end
 end
+

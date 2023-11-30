@@ -3,8 +3,6 @@
 require 'roar/decorator'
 require 'roar/json'
 
-require_relative 'member_representer'
-
 # Represents essential Repo information for API output
 module TranSound
   module Representer
