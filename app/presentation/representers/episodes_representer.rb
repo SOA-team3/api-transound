@@ -25,7 +25,7 @@ module TranSound
       property :translation
 
       link :self do
-        "#{ENV.fetch('API_HOST', nil)}/api/v1/episodes/#{episode_type}/#{episode_id}"
+        "#{ENV.fetch('API_HOST', nil)}/api/v1/podcast_info/#{episode_type}/#{episode_id}"
       end
 
       private

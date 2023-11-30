@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module TranSound
-  module RouteHelpers
+  module Request
     # Application value for the path of a requested project
     class PodcastInfoPath
       def initialize(type, id)

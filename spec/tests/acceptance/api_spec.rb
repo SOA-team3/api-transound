@@ -34,15 +34,15 @@ describe 'Test API routes' do
     end
   end
 
-  describe 'View episode folder route' do
-    it 'should be able to view a episode' do
+  describe 'View episode route' do
+    it 'should be able to view an episode' do
       TranSound::Service::AddPodcastInfo.new.call(
-        episode_type: EPISODE_TYPE, episode_id: EPISODE_ID, market: MARKET
+        episode_type: EPISODE_TYPE, episode_id: EPISODE_ID
       )
-      get "/api/v1/podcast_info/#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}"
+      get "/api/v1/podcast_info/#{EPISODE_TYPE}/#{EPISODE_ID}"
       _(last_response.status).must_equal 200
       result = JSON.parse last_response.body
-      _(result.keys.sort).must_equal %w[folder episode]
+      _(result.keys.sort).must_equal %w[episode]
       _(result['episode']['origin_id']).must_equal EPISODE_ID
       _(result['episode']['type']).must_equal EPISODE_TYPE
       _(result['episode']['description']).must_equal 'It turns out that hoverflies may fly hundreds or even thousands of miles—all
@@ -51,22 +51,22 @@ describe 'Test API routes' do
       _(result['episode']['release_date']).must_equal '2022-09-07'
     end
 
-    it 'should be report error for an invalid subfolder' do
+    it 'should be report error for an invalid episode_info' do
       TranSound::Service::AddPodcastInfo.new.call(
         episode_type: EPISODE_TYPE, episode_id: EPISODE_ID
       )
 
-      get "/api/v1/episodes/#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}/foobar"
+      get "/api/v1/podcast_info/#{EPISODE_TYPE}/#{EPISODE_ID}/foobar"
       _(last_response.status).must_equal 404
       _(JSON.parse(last_response.body)['status']).must_include 'not'
     end
 
     it 'should be report error for an invalid episode' do
       TranSound::Service::AddPodcastInfo.new.call(
-        episode_type: 'episodes', EPISODE_ID: '2zplNaMpre0ASbFJV7OSSq'
+        episode_type: 'episodes', episode_id: '2zplNaMpre0ASbFJV7OSSq'
       )
 
-      get "/api/v1/episodes/#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}/foobar"
+      get "/api/v1/podcast_info/#{EPISODE_TYPE}/#{EPISODE_ID}/foobar"
       _(last_response.status).must_equal 404
       _(JSON.parse(last_response.body)['status']).must_include 'not'
     end
@@ -74,7 +74,7 @@ describe 'Test API routes' do
 
   describe 'Add episodes route' do
     it 'should be able to add a episode' do
-      post "api/v1/episodes/#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}"
+      post "api/v1/podcast_info/#{EPISODE_TYPE}/#{EPISODE_ID}"
 
       _(last_response.status).must_equal 201
 
@@ -89,8 +89,9 @@ describe 'Test API routes' do
       _(episode.links['self'].href).must_include 'http'
     end
 
-    it 'should report error for invalid episodes' do
-      post 'api/v1/episodes/2zplNaMpre0ASbFJV7OSSq/market=TW'
+    it 'should report error for invalid episode' do
+      bad_episode_id = 'bad_episode_id'
+      post "api/v1/podcast_info/episode/#{bad_episode_id}"
 
       _(last_response.status).must_equal 404
 
@@ -108,7 +109,7 @@ describe 'Test API routes' do
       list = ["#{EPISODE_TYPE}/#{EPISODE_ID}?market=#{MARKET}"]
       encoded_list = TranSound::Request::EncodedEpisodeList.to_encoded(list)
 
-      get "/api/v1/episodes?list=#{encoded_list}"
+      get "/api/v1/podcast_info/episode?list=#{encoded_list}"
       _(last_response.status).must_equal 200
 
       response = JSON.parse(last_response.body)
@@ -124,7 +125,7 @@ describe 'Test API routes' do
       list = ['djsafildafs;d/239eidj-fdjs']
       encoded_list = TranSound::Request::EncodedEpisodeList.to_encoded(list)
 
-      get "/api/v1/episodes?list=#{encoded_list}"
+      get "/api/v1/podcast_info/episode?list=#{encoded_list}"
       _(last_response.status).must_equal 200
 
       response = JSON.parse(last_response.body)
@@ -134,7 +135,8 @@ describe 'Test API routes' do
     end
 
     it 'should return error if not list provided' do
-      get '/api/v1/episodes'
+      get '/api/v1/podcast_info/episode'
+
       _(last_response.status).must_equal 400
 
       response = JSON.parse(last_response.body)
@@ -142,30 +144,30 @@ describe 'Test API routes' do
     end
   end
 
-  describe 'View show folder route' do
+  describe 'View show route' do
     it 'should be able to view a show' do
       TranSound::Service::AddPodcastInfo.new.call(
         show_type: SHOW_TYPE, show_id: SHOW_ID
       )
-      get "/api/v1/podcast_info/#{SHOW_TYPE}/#{SHOW_ID}?market=TW"
+      get "/api/v1/podcast_info/#{SHOW_TYPE}/#{SHOW_ID}"
       _(last_response.status).must_equal 200
       result = JSON.parse last_response.body
-      _(result.keys.sort).must_equal %w[folder show]
+      _(result.keys.sort).must_equal %w[show]
       _(result['show']['origin_id']).must_equal SHOW_ID
       _(result['show']['type']).must_equal SHOW_TYPE
       _(result['show']['market']).must_equal MARKET
-      _(result['folder']['description']).must_equal 'Kylie跟Ken 用雙語的對話包裝知識，用輕鬆的口吻胡說八道。我們閒聊也談正經事，讓生硬的國際大事變得鬆軟好入口；歡迎你加入這外表看似嘴砲，內容卻異於常人的有料聊天
+      _(result['show']['description']).must_equal 'Kylie跟Ken 用雙語的對話包裝知識，用輕鬆的口吻胡說八道。我們閒聊也談正經事，讓生硬的國際大事變得鬆軟好入口；歡迎你加入這外表看似嘴砲，內容卻異於常人的有料聊天
       Bailingguo News。'
-      _(result['folder']['name']).must_equal '百靈果 News'
-      _(result['folder']['publisher']).must_equal 'Bailingguo News'
+      _(result['show']['name']).must_equal '百靈果 News'
+      _(result['show']['publisher']).must_equal 'Bailingguo News'
     end
 
-    it 'should be report error for an invalid subfolder' do
+    it 'should be report error for an invalid show_info' do
       TranSound::Service::AddPodcastInfo.new.call(
         show_type: SHOW_TYPE, show_id: SHOW_ID
       )
 
-      get "/api/v1/shows/#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}/foobar"
+      get "/api/v1/podcast_info/#{SHOW_TYPE}/#{SHOW_ID}/foobar"
       _(last_response.status).must_equal 404
       _(JSON.parse(last_response.body)['status']).must_include 'not'
     end
@@ -175,7 +177,7 @@ describe 'Test API routes' do
         SHOW_type: 'shows', SHOW_ID: '5Vv32KtHB3peVZ8TeacUty'
       )
 
-      get "/api/v1/shows/#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}/foobar"
+      get "/api/v1/podcast_info/#{SHOW_TYPE}/#{SHOW_ID}/foobar"
       _(last_response.status).must_equal 404
       _(JSON.parse(last_response.body)['status']).must_include 'not'
     end
@@ -183,7 +185,7 @@ describe 'Test API routes' do
 
   describe 'Add shows route' do
     it 'should be able to add a show' do
-      post "api/v1/shows/#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}"
+      post "api/v1/podcast_info/#{SHOW_TYPE}/#{SHOW_ID}"
 
       _(last_response.status).must_equal 201
 
@@ -199,7 +201,8 @@ describe 'Test API routes' do
     end
 
     it 'should report error for invalid shows' do
-      post 'api/v1/shows/5Vv32KtHB3peVZ8TeacUty/market=TW'
+      bad_show_id = 'bad_show_id'
+      post "api/v1/podcast_info/show/#{bad_show_id}"
 
       _(last_response.status).must_equal 404
 
@@ -211,13 +214,13 @@ describe 'Test API routes' do
   describe 'Get shows list' do
     it 'should successfully return show lists' do
       TranSound::Service::AddPodcastInfo.new.call(
-        show_type: SHOW_TYPE, show_id: SHOW_ID, market: MARKET
+        show_type: SHOW_TYPE, show_id: SHOW_ID
       )
 
-      list = ["#{SHOW_TYPE}/#{SHOW_ID}?market=#{MARKET}"]
+      list = ["#{SHOW_TYPE}/#{SHOW_ID}"]
       encoded_list = TranSound::Request::EncodedShowList.to_encoded(list)
 
-      get "/api/v1/shows?list=#{encoded_list}"
+      get "/api/v1/podcast_info/show?list=#{encoded_list}"
       _(last_response.status).must_equal 200
 
       response = JSON.parse(last_response.body)
@@ -230,10 +233,10 @@ describe 'Test API routes' do
     end
 
     it 'should return empty lists if none found' do
-      list = ['djsafildafs;d/239eidj-fdjs']
+      list = ['bad_show_id']
       encoded_list = TranSound::Request::EncodedShowList.to_encoded(list)
 
-      get "/api/v1/shows?list=#{encoded_list}"
+      get "/api/v1/podcast_info/show?list=#{encoded_list}"
       _(last_response.status).must_equal 200
 
       response = JSON.parse(last_response.body)
@@ -243,7 +246,7 @@ describe 'Test API routes' do
     end
 
     it 'should return error if not list provided' do
-      get '/api/v1/shows'
+      get '/api/v1/podcast_info/show'
       _(last_response.status).must_equal 400
 
       response = JSON.parse(last_response.body)
