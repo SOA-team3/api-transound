@@ -45,8 +45,8 @@ describe 'Test API routes' do
       _(result.keys.sort).must_equal %w[episode]
       _(result['episode']['origin_id']).must_equal EPISODE_ID
       _(result['episode']['type']).must_equal EPISODE_TYPE
-      _(result['episode']['description']).must_equal 'It turns out that hoverflies may fly hundreds or even thousands of miles—all
-      to help pollinate our flowers and vegetables.'
+      _(result['episode']['description']).must_equal 'It turns out that hoverflies may fly hundreds or even
+      thousands of miles—all to help pollinate our flowers and vegetables.'
       _(result['episode']['name']).must_equal 'These Tiny Pollinators Can Travel Surprisingly Huge Distances'
       _(result['episode']['release_date']).must_equal '2022-09-07'
     end
@@ -156,8 +156,8 @@ describe 'Test API routes' do
       _(result['show']['origin_id']).must_equal SHOW_ID
       _(result['show']['type']).must_equal SHOW_TYPE
       _(result['show']['market']).must_equal MARKET
-      _(result['show']['description']).must_equal 'Kylie跟Ken 用雙語的對話包裝知識，用輕鬆的口吻胡說八道。我們閒聊也談正經事，讓生硬的國際大事變得鬆軟好入口；歡迎你加入這外表看似嘴砲，內容卻異於常人的有料聊天
-      Bailingguo News。'
+      _(result['show']['description']).must_equal 'Kylie跟Ken 用雙語的對話包裝知識，用輕鬆的口吻胡說八道。我們閒聊也談正經事，讓生硬的國際大事變得鬆軟好入口；歡迎你加入這外表看似
+      嘴砲，內容卻異於常人的有料聊天Bailingguo News。'
       _(result['show']['name']).must_equal '百靈果 News'
       _(result['show']['publisher']).must_equal 'Bailingguo News'
     end

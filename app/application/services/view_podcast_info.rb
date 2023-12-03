@@ -9,7 +9,6 @@ module TranSound
       include Dry::Transaction
 
       step :retrieve_remote_podcast_info
-      # step :view_podcast_info
 
       private
 
@@ -57,21 +56,6 @@ module TranSound
                   ))
         end
       end
-
-      # def view_podcast_info(input)
-      #   requested = input[:requested]
-      #   type = requested.type
-      #   if type == 'episode'
-      #     episode = Response::ViewPodcastInfo.new(input[:episode])
-      #     Success(Response::ApiResult.new(status: :ok, message: input[:episode]))
-      #   elsif type == 'show'
-      #     show = Response::ViewPodcastInfo.new(input[:show])
-      #     puts "fuck #{show}"
-      #     Success(Response::ApiResult.new(status: :ok, message: input[:show]))
-      #   end
-      # rescue StandardError
-      #   Failure(Response::ApiResult.new(status: :internal_error, message: NO_VIEW_ERR))
-      # end
     end
   end
 end
