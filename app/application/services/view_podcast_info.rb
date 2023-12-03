@@ -48,8 +48,7 @@ module TranSound
         input[:show] = Repository::For.klass(Entity::Show).find_podcast_info(
           requested.id
         )
-        puts "input[:show]: #{input[:show]}"
-        puts "requested.id: #{requested.id}"
+
         if input[:show]
           Success(Response::ApiResult.new(status: :ok, message: input[:show]))
         else

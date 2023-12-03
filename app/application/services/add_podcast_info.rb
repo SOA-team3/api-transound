@@ -15,6 +15,8 @@ module TranSound
 
       private
 
+      DB_ERR_MSG = 'Having trouble accessing the database (Might have same data in database)'
+
       def find_podcast_info(input)
         @type = input[:type]
         if @type == 'episode'
@@ -23,7 +25,7 @@ module TranSound
           handle_find_show(input)
         end
       rescue StandardError => e
-        Failure(e.to_s)
+        Failure(Response::ApiResult.new(status: :not_found, message: e.to_s))
       end
 
       def store_podcast_info(input)
@@ -34,7 +36,7 @@ module TranSound
         end
       rescue StandardError => e
         App.logger.error e.backtrace.join("\n")
-        Failure('Having trouble accessing the database')
+        Failure(Response::ApiResult.new(status: :internal_error, message: DB_ERR_MSG))
       end
 
       # following are support methods that other services could use
@@ -63,8 +65,6 @@ module TranSound
             Repository::For.entity(podcast_info).create(podcast_info)
           else
             input[:local_episode]
-            flash[:error] = "Podcast #{@type} information already exists"
-            routing.redirect '/'
           end
         Success(Response::ApiResult.new(status: :created, message: episode))
       end
@@ -75,8 +75,6 @@ module TranSound
             Repository::For.entity(podcast_info).create(podcast_info)
           else
             input[:local_show]
-            flash[:error] = "Podcast #{@type} information already exists"
-            routing.redirect '/'
           end
         Success(Response::ApiResult.new(status: :created, message: show))
       end
