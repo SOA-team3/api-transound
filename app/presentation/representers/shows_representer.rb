@@ -12,6 +12,7 @@ module TranSound
       include Roar::Hypermedia
       include Roar::Decorator::HypermediaConsumer
 
+      property :id
       property :origin_id
       property :description
       property :images
