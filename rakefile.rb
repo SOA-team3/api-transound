@@ -44,7 +44,7 @@ namespace :db do
     require_relative 'config/environment' # load config info
     require_relative 'spec/helpers/database_helper'
 
-    def app = CodePraise::App
+    def app = TranSound::App
   end
 
   desc 'Run migrations'
@@ -81,7 +81,7 @@ end
 namespace :repos do
   task :config do
     require_relative 'config/environment' # load config info
-    def app = CodePraise::App
+    def app = TranSound::App
   end
 
   desc 'Create director for repo store'

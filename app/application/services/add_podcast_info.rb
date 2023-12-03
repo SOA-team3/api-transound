@@ -66,7 +66,7 @@ module TranSound
             flash[:error] = "Podcast #{@type} information already exists"
             routing.redirect '/'
           end
-        Success(episode)
+        Success(Response::ApiResult.new(status: :created, message: episode))
       end
 
       def handle_store_show(input)
@@ -78,7 +78,7 @@ module TranSound
             flash[:error] = "Podcast #{@type} information already exists"
             routing.redirect '/'
           end
-        Success(show)
+        Success(Response::ApiResult.new(status: :created, message: show))
       end
 
       def episode_from_spotify(input)
