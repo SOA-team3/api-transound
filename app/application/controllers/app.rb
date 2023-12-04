@@ -70,6 +70,10 @@ module TranSound
 
             # POST /episode/id or /show/id
             routing.post do
+              puts "app.rb + #{type}"
+              puts "app.rb + #{id}"
+              puts TEMP_TOKEN_CONFIG
+
               result = Service::AddPodcastInfo.new.call(
                 type:, id:
               )
