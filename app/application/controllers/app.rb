@@ -2,6 +2,8 @@
 
 require 'roda'
 
+TEMP_TOKEN_CONFIG = YAML.safe_load_file('config/temp_token.yml')
+
 module TranSound
   # Application inherits from Roda
   class App < Roda
@@ -31,8 +33,9 @@ module TranSound
           routing.on String, String do |type, id|
             # GET /episode/id or /show/id
             routing.get do
-              puts type
-              puts id
+              puts "app.rb + #{type}"
+              puts "app.rb + #{id}"
+              puts TEMP_TOKEN_CONFIG
 
               path_request = Request::PodcastInfoPath.new(
                 type, id, request
