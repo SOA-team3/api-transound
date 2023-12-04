@@ -70,6 +70,8 @@ module TranSound
 
             # POST /episode/id or /show/id
             routing.post do
+              temp_token = TranSound::Podcast::Api::Token.new(App.config, App.config.spotify_Client_ID,
+                                                              App.config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
               puts "app.rb + #{type}"
               puts "app.rb + #{id}"
               puts TEMP_TOKEN_CONFIG
