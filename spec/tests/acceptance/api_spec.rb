@@ -63,7 +63,7 @@ describe 'Test API routes' do
 
     it 'should be report error for an invalid episode' do
       TranSound::Service::AddPodcastInfo.new.call(
-        episode_type: 'episodes', episode_id: '2zplNaMpre0ASbFJV7OSSq'
+        episode_type: 'episode', episode_id: '2zplNaMpre0ASbFJV7OSSq'
       )
 
       get "/api/v1/podcast_info/#{EPISODE_TYPE}/#{EPISODE_ID}/foobar"
@@ -174,7 +174,7 @@ describe 'Test API routes' do
 
     it 'should be report error for an invalid show' do
       TranSound::Service::AddPodcastInfo.new.call(
-        SHOW_type: 'shows', SHOW_ID: '5Vv32KtHB3peVZ8TeacUty'
+        show_type: 'show', show_id: '5Vv32KtHB3peVZ8TeacUty'
       )
 
       get "/api/v1/podcast_info/#{SHOW_TYPE}/#{SHOW_ID}/foobar"
