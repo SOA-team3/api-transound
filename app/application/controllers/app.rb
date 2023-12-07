@@ -29,7 +29,7 @@ module TranSound
       routing.on 'api/v1' do
         routing.on 'podcast_info' do
           routing.on String, String do |type, id|
-            # GET /episode/id or /show/id
+            # GET /episode/id or /show/id 網址拿
             routing.get do
               puts type
               puts id
@@ -65,7 +65,7 @@ module TranSound
               end
             end
 
-            # POST /episode/id or /show/id
+            # POST /episode/id or /show/id terminal 存 db
             routing.post do
               result = Service::AddPodcastInfo.new.call(
                 type:, id:

@@ -24,17 +24,29 @@ task :rerun do
 end
 
 desc 'Run web app in default (dev) mode'
-task run: ['run:default']
+task run: ['run:dev']
 
 namespace :run do
   desc 'Run API in dev mode'
-  task :default do
-    sh 'rerun -c "bundle exec puma -p 9090"'
+  task :dev do
+    sh "rerun -c --ignore 'coverage/*' --ignore 'repostore/*' -- bundle exec puma -p 9090"
   end
 
   desc 'Run API in test mode'
   task :test do
     sh 'RACK_ENV=test bundle exec puma -p 9090'
+  end
+end
+
+namespace :run do
+  desc 'Run API in dev mode'
+  task :dev do
+    sh 'rerun -c "rackup -p 9090"'
+  end
+
+  desc 'Run API in test mode'
+  task :test do
+    sh 'RACK_ENV=test rackup -p 9090'
   end
 end
 
