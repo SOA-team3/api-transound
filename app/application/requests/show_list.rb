@@ -41,7 +41,7 @@ module TranSound
 
       # Use in tests to create a ShowList object from a list
       def self.to_request(list)
-        EncodedEpisodeList.new('list' => to_encoded(list))
+        EncodedShowList.new('list' => to_encoded(list))
       end
     end
   end

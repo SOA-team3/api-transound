@@ -84,6 +84,33 @@ module TranSound
                 Representer::Show.new(result.value!.message).to_json
               end
             end
+
+            routing.is do
+              # GET /projects?list={base64_json_array_of_project_fullnames}
+              routing.get do
+                if type == 'episode'
+                  list_req = Request::EncodedEpisodeList.new(routing.params)
+                  result = Service::ListEpisodes.new.call(list_request: list_req)
+                elsif type == 'show'
+                  list_req = Request::EncodedShowList.new(routing.params)
+                  result = Service::ListShows.new.call(list_request: list_req)
+                end
+
+                if result.failure?
+                  failed = Representer::HttpResponse.new(result.failure)
+                  routing.halt failed.http_status_code, failed.to_json
+                end
+
+                http_response = Representer::HttpResponse.new(result.value!)
+                response.status = http_response.http_status_code
+
+                if type == 'episode'
+                  Representer::Episode.new(result.value!.message).to_json
+                elsif type == 'show'
+                  Representer::Show.new(result.value!.message).to_json
+                end
+              end
+            end
           end
         end
       end
