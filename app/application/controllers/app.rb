@@ -31,6 +31,8 @@ module TranSound
           routing.on String, String do |type, id|
             # GET /episode/id or /show/id
             routing.get do
+              response.cache_control public: true, max_age: 300
+
               puts type
               puts id
 
