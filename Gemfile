@@ -7,6 +7,7 @@ ruby File.read('.ruby-version').strip
 # Configuration and Utilities
 gem 'figaro', '~> 1.0'
 gem 'pry'
+gem 'rack-test' # for testing and can also be used to diagnose in production
 gem 'rake'
 
 # APPLICATION LAYER
