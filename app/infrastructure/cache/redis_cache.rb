@@ -2,7 +2,7 @@
 
 require 'redis'
 
-module CodePraise
+module TranSound
   module Cache
     # Redis client utility
     class Client
