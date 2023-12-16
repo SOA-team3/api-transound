@@ -2,6 +2,8 @@
 
 require 'roda'
 
+TEMP_TOKEN_CONFIG = YAML.safe_load_file('config/temp_token.yml')
+
 module TranSound
   # Application inherits from Roda
   class App < Roda
@@ -31,8 +33,9 @@ module TranSound
           routing.on String, String do |type, id|
             # GET /episode/id or /show/id 網址拿
             routing.get do
-              puts type
-              puts id
+              puts "app.rb + #{type}"
+              puts "app.rb + #{id}"
+              puts TEMP_TOKEN_CONFIG
 
               path_request = Request::PodcastInfoPath.new(
                 type, id, request
@@ -67,6 +70,12 @@ module TranSound
 
             # POST /episode/id or /show/id terminal 存 db
             routing.post do
+              TranSound::Podcast::Api::Token.new(App.config, App.config.spotify_Client_ID,
+                                                              App.config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
+              puts "app.rb + #{type}"
+              puts "app.rb + #{id}"
+              puts TEMP_TOKEN_CONFIG
+
               result = Service::AddPodcastInfo.new.call(
                 type:, id:
               )

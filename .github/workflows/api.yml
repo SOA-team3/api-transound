@@ -1,3 +1,4 @@
+
 # API testing workflow config for CI/CD on Github
 
 name: API continuous integration
@@ -47,5 +48,4 @@ jobs:
           spotify_Client_secret: ${{secrets.spotify_Client_secret}}
           API_HOST: ${{secrets.API_HOST }}
         run: bundle exec rake spec
-
 
