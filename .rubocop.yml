@@ -18,7 +18,7 @@ Metrics/BlockLength:
     - 'rakefile.rb'
     - 'app/controllers/app.rb'
     - 'app/application/controllers/**/*.rb'
-    - spec/**/*
+    - 'config/environment.rb'
 
 # ignore method length in rebuilding entity only
 Metrics/MethodLength:
@@ -40,3 +40,10 @@ Style/RedundantAssignment:
   Enabled: true
   Exclude:
     - 'app/domain/audio_datas/entities/audio_data.rb'
+
+Style/OpenStructUse:
+  Enabled: true
+  Exclude:
+    - 'app/presentation/representers/openstruct_with_links.rb'
+    - 'app/presentation/representers/episodes_view.rb'
+    - 'app/presentation/representers/shows_view.rb'

@@ -23,8 +23,7 @@ module TranSound
         requested = input[:requested]
         type = requested.type
 
-        puts "api, view: #{requested.id}"
-        puts "api, view: #{type}"
+        puts "api, view: #{requested.id}\napi, view: #{type}"
 
         if type == 'episode'
           handle_retrieve_remote_episode(requested, input)
@@ -63,8 +62,6 @@ module TranSound
       end
 
       def view_podcast_info_list(input)
-        puts "api, view, hello"
-
         requested = input[:requested]
         type = requested.type
 
@@ -73,7 +70,6 @@ module TranSound
         elsif type == 'show'
           podcast_info = Response::ShowsView.new(input[:show])
         end
-        puts "api, view, podcast_info: #{podcast_info}"
 
         Success(Response::ApiResult.new(status: :ok, message: podcast_info))
       rescue StandardError
