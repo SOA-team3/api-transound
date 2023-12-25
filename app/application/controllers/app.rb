@@ -2,6 +2,8 @@
 
 require 'roda'
 
+TEMP_TOKEN_CONFIG = YAML.safe_load_file('config/temp_token.yml')
+
 module TranSound
   # Application inherits from Roda
   class App < Roda
@@ -74,9 +76,15 @@ module TranSound
 
             # POST /episode/id or /show/id
             routing.post do
-              result = Service::AddPodcastInfo.new.call(
-                type:, id:
-              )
+              if type == 'episode'
+                result = Service::AddEpisode.new.call(
+                  type:, id:
+                )
+              elsif type == 'show'
+                result = Service::AddShow.new.call(
+                  type:, id:
+                )
+              end
 
               puts "api, app.rb, post: #{result.inspect}"
 
