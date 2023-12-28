@@ -20,14 +20,15 @@ module TranSound
           region: config.AWS_REGION
         )
         @queue = Aws::SQS::Queue.new(url: queue_url, client: sqs)
-        puts "access_key_id: #{config.AWS_ACCESS_KEY_ID},
+        puts "queue_url: #{@queue_url}, 
+        access_key_id: #{config.AWS_ACCESS_KEY_ID},
         secret_access_key: #{config.AWS_SECRET_ACCESS_KEY},
         region: #{config.AWS_REGION}"
       end
 
       ## Sends message to queue
       # Usage:
-      #   q = Messaging::Queue.new(App.config.CLONE_QUEUE_URL)
+      #   q = Messaging::Queue.new(App.config.ADD_PODCAST_INFO_QUEUE_URL)
       #   q.send({data: "hello"}.to_json)
       def send(message)
         puts "infrastucture/queue send, message: #{message}"
@@ -36,7 +37,7 @@ module TranSound
 
       ## Polls queue, yielding each messge
       # Usage:
-      #   q = Messaging::Queue.new(App.config.CLONE_QUEUE_URL)
+      #   q = Messaging::Queue.new(App.config.ADD_PODCAST_INFO_QUEUE_URL)
       #   q.poll { |msg| print msg.body.to_s }
       def poll
         poller = Aws::SQS::QueuePoller.new(@queue_url)

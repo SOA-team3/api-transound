@@ -29,14 +29,15 @@ module TranSound
       end
 
       def request_episode_worker(input)
-        # return Success(input) if episode == episode_in_database(input)
+        puts 'add_podcast_info, request_episode_worker'
+        # origin_id = input[:id]
 
         temp_token = TranSound::Podcast::Api::Token.new(App.config, App.config.spotify_Client_ID,
                                                         App.config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
 
-        input[:remote_episode] = Messaging::Queue
-          .new(App.config.ADD_PODCAST_INFO_QUEUE_URL, App.config)
-          .send(input[:id])
+        # json = Representer::Episode.new(Response::Episode.new(origin_id:)).to_json
+
+        input[:remote_episode] = Messaging::Queue.new(App.config.ADD_PODCAST_INFO_QUEUE_URL, App.config).send(input[:id])
 
         Failure(Response::ApiResult.new(status: :processing, message: PROCESSING_MSG_EP))
       rescue StandardError
