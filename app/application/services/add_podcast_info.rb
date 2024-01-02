@@ -30,14 +30,15 @@ module TranSound
 
       def request_episode_worker(input)
         puts 'add_podcast_info, request_episode_worker'
-        # origin_id = input[:id]
+        config = App.config
 
-        temp_token = TranSound::Podcast::Api::Token.new(App.config, App.config.spotify_Client_ID,
-                                                        App.config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
+        TranSound::Podcast::Api::Token.new(config, config.spotify_Client_ID,
+                                           config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
 
         # json = Representer::Episode.new(Response::Episode.new(origin_id:)).to_json
 
-        input[:remote_episode] = Messaging::Queue.new(App.config.ADD_PODCAST_INFO_QUEUE_URL, App.config).send(input[:id])
+        input[:remote_episode] =
+          Messaging::Queue.new(config.ADD_PODCAST_INFO_QUEUE_URL, config).send(input[:id])
 
         Failure(Response::ApiResult.new(status: :processing, message: PROCESSING_MSG_EP))
       rescue StandardError
@@ -64,6 +65,7 @@ module TranSound
       end
     end
 
+    # Transaction to store show from Spotify API to database
     class AddShow
       include Dry::Transaction
 
@@ -99,8 +101,9 @@ module TranSound
       end
 
       def show_from_spotify(input)
-        temp_token = TranSound::Podcast::Api::Token.new(App.config, App.config.spotify_Client_ID,
-                                                        App.config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
+        config = App.config
+        temp_token = TranSound::Podcast::Api::Token.new(config, config.spotify_Client_ID,
+                                                        config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
         TranSound::Podcast::ShowMapper
           .new(temp_token)
           .find('shows', input[:id], 'TW')
