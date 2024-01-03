@@ -104,6 +104,8 @@ module TranSound
         config = App.config
         temp_token = TranSound::Podcast::Api::Token.new(config, config.spotify_Client_ID,
                                                         config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
+
+        puts "add_podcast_info, show: #{TEMP_TOKEN_CONFIG}"
         TranSound::Podcast::ShowMapper
           .new(temp_token)
           .find('shows', input[:id], 'TW')
@@ -117,6 +119,7 @@ module TranSound
       end
     end
 
+    # Transaction to store episode from Spotify API to database
     class AddEpisode
       include Dry::Transaction
 
@@ -156,9 +159,10 @@ module TranSound
       def episode_from_spotify(input)
         temp_token = TranSound::Podcast::Api::Token.new(App.config, App.config.spotify_Client_ID,
                                                         App.config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
+        puts "add_podcast_info, show: #{TEMP_TOKEN_CONFIG}"
         TranSound::Podcast::EpisodeMapper
           .new(temp_token)
-          .find("#{@type}s", input[:id], 'TW')
+          .find('episodes', input[:id], 'TW')
       rescue StandardError
         raise 'Could not find that episode on Spotify'
       end
