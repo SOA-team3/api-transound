@@ -270,6 +270,7 @@ DEPENDENCIES
   redis-rack-cache (~> 2.2)
   reek
   rerun (~> 0.0)
+  rexml (~> 3.2)
   roar (~> 1.0)
   roda (~> 3)
   rubocop (~> 1.0)
