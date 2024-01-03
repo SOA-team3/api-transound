@@ -59,6 +59,7 @@ end
 # Asynchronicity
 gem 'aws-sdk-sqs', '~> 1.48'
 gem 'concurrent-ruby', '~> 1.1'
+gem 'rexml', '~> 3.2'
 
 # WORKER
 gem 'faye', '~> 1.4'
