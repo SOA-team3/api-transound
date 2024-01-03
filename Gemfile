@@ -10,12 +10,14 @@ gem 'pry'
 gem 'rack-test' # for testing and can also be used to diagnose in production
 gem 'rake'
 
+# PRESENTATION LAYER
+gem 'multi_json', '~> 1.15'
+gem 'roar', '~> 1.0'
+
 # APPLICATION LAYER
 # Web Application related
-gem 'multi_json', '~> 1.15'
 gem 'puma', '~> 6'
 gem 'rack-session', '~> 0.3'
-gem 'roar', '~> 1.0'
 gem 'roda', '~> 3'
 
 # Controllers and services
@@ -46,11 +48,6 @@ gem 'hirb'
 # gem 'hirb-unicode' # incompatible with new rubocop
 gem 'sequel', '~> 5.0'
 
-# Asynchronicity
-gem 'aws-sdk-sqs', '~> 1.48'
-gem 'concurrent-ruby', '~> 1.1'
-gem 'shoryuken', '~> 5.3'
-
 group :development, :test do
   gem 'sqlite3', '~> 1.0'
 end
@@ -58,6 +55,14 @@ end
 group :production do
   gem 'pg', '~> 1.2'
 end
+
+# Asynchronicity
+gem 'aws-sdk-sqs', '~> 1.48'
+gem 'concurrent-ruby', '~> 1.1'
+
+# WORKER
+gem 'faye', '~> 1.4'
+gem 'shoryuken', '~> 5.3'
 
 # TESTING
 group :test do
