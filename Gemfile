@@ -3,31 +3,36 @@
 source 'https://rubygems.org'
 ruby File.read('.ruby-version').strip
 
+# CONFIGURATION
 # Configuration and Utilities
 gem 'figaro', '~> 1.0'
 gem 'pry'
-gem 'rack-test'
+gem 'rack-test' # for testing and can also be used to diagnose in production
 gem 'rake'
 
-# Presentation layer
+# APPLICATION LAYER
+# Web Application related
 gem 'multi_json', '~> 1.15'
-gem 'roar', '~> 1.1'
-
-# Web Application
 gem 'puma', '~> 6'
 gem 'rack-session', '~> 0.3'
+gem 'roar', '~> 1.0'
 gem 'roda', '~> 3'
-gem 'slim', '~> 5'
 
 # Controllers and services
 gem 'dry-monads', '~> 1.4'
 gem 'dry-transaction', '~> 0.13'
 gem 'dry-validation', '~> 1.7'
 
+# Caching
+gem 'rack-cache', '~> 1.13'
+gem 'redis', '~> 4.8'
+gem 'redis-rack-cache', '~> 2.2'
+
 # Validation
 gem 'dry-struct', '~> 1'
 gem 'dry-types', '~> 1'
 
+# INFRASTRUCTURE LAYER
 # Networking
 gem 'http', '~> 5.1'
 
@@ -41,6 +46,11 @@ gem 'hirb'
 # gem 'hirb-unicode' # incompatible with new rubocop
 gem 'sequel', '~> 5.0'
 
+# Asynchronicity
+gem 'aws-sdk-sqs', '~> 1.48'
+gem 'concurrent-ruby', '~> 1.1'
+gem 'shoryuken', '~> 5.3'
+
 group :development, :test do
   gem 'sqlite3', '~> 1.0'
 end
@@ -49,7 +59,7 @@ group :production do
   gem 'pg', '~> 1.2'
 end
 
-# Testing
+# TESTING
 group :test do
   gem 'minitest', '~> 5.0'
   gem 'minitest-rg', '~> 5.0'

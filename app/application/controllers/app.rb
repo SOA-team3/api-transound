@@ -9,6 +9,7 @@ module TranSound
   class App < Roda
     plugin :halt
     plugin :flash
+    plugin :caching
     plugin :all_verbs # allows HTTP verbs beyond GET/POST (e.g., DELETE)
 
     # use Rack::MethodOverride # allows HTTP verbs beyond GET/POST (e.g., DELETE)
@@ -33,21 +34,26 @@ module TranSound
           routing.on String, String do |type, id|
             # GET /episode/id or /show/id
             routing.get do
-              puts "app.rb + #{type}"
-              puts "app.rb + #{id}"
+              response.cache_control public: true, max_age: 400
+
+              TranSound::Podcast::Api::Token.new(App.config, App.config.spotify_Client_ID,
+                                                 App.config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
               puts TEMP_TOKEN_CONFIG
+
+              puts "api, app.rb: #{type}"
+              puts "api, app.rb: #{id}"
 
               path_request = Request::PodcastInfoPath.new(
                 type, id, request
               )
 
-              puts path_request
+              puts "api, app.rb: #{path_request.inspect}"
 
               result = Service::ViewPodcastInfo.new.call(
                 requested: path_request
               )
 
-              puts result
+              puts "api, app.rb, success: #{result}"
 
               if result.failure?
                 failed = Representer::HttpResponse.new(result.failure)
@@ -57,12 +63,12 @@ module TranSound
               http_response = Representer::HttpResponse.new(result.value!)
               response.status = http_response.http_status_code
 
-              if type == 'show'
-                Representer::Show.new(
+              if type == 'episode'
+                Representer::EpisodesView.new(
                   result.value!.message
                 ).to_json
-              elsif type == 'episode'
-                Representer::Episode.new(
+              elsif type == 'show'
+                Representer::ShowsView.new(
                   result.value!.message
                 ).to_json
               end
@@ -70,15 +76,17 @@ module TranSound
 
             # POST /episode/id or /show/id
             routing.post do
-              TranSound::Podcast::Api::Token.new(App.config, App.config.spotify_Client_ID,
-                                                              App.config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
-              puts "app.rb + #{type}"
-              puts "app.rb + #{id}"
-              puts TEMP_TOKEN_CONFIG
+              if type == 'episode'
+                result = Service::AddEpisode.new.call(
+                  type:, id:
+                )
+              elsif type == 'show'
+                result = Service::AddShow.new.call(
+                  type:, id:
+                )
+              end
 
-              result = Service::AddPodcastInfo.new.call(
-                type:, id:
-              )
+              puts "api, app.rb, post: #{result.inspect}"
 
               if result.failure?
                 failed = Representer::HttpResponse.new(result.failure)
@@ -91,6 +99,35 @@ module TranSound
                 Representer::Episode.new(result.value!.message).to_json
               elsif type == 'show'
                 Representer::Show.new(result.value!.message).to_json
+              end
+            end
+
+            routing.is do
+              # GET /projects?list={base64_json_array_of_project_fullnames}
+              routing.get do
+                if type == 'episode'
+                  list_req = Request::EncodedEpisodeList.new(routing.params)
+                  result = Service::ListEpisodes.new.call(list_request: list_req)
+                elsif type == 'show'
+                  list_req = Request::EncodedShowList.new(routing.params)
+                  result = Service::ListShows.new.call(list_request: list_req)
+                end
+
+                if result.failure?
+                  failed = Representer::HttpResponse.new(result.failure)
+                  routing.halt failed.http_status_code, failed.to_json
+                end
+
+                http_response = Representer::HttpResponse.new(result.value!)
+                response.status = http_response.http_status_code
+
+                puts "app.rb: #{result.value}"
+
+                if type == 'episode'
+                  Representer::EpisodesList.new(result.value!.message).to_json
+                elsif type == 'show'
+                  Representer::ShowsList.new(result.value!.message).to_json
+                end
               end
             end
           end

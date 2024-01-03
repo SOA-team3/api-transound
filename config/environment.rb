@@ -6,6 +6,8 @@ require 'rack/session'
 require 'roda'
 require 'sequel'
 require 'yaml'
+require 'rack/cache'
+require 'redis-rack-cache'
 
 # Get TranSound::Token class
 require_relative '../app/infrastructure/gateways/podcast_api'
@@ -37,8 +39,35 @@ module TranSound
 
       use Rack::Session::Cookie, secret: config.SESSION_SECRET
 
-      configure :development, :test do
+      configure :development, :test, :app_test do
+        require 'pry'; # for breakpoints
         ENV['DATABASE_URL'] = "sqlite://#{config.DB_FILENAME}"
+      end
+
+      configure :development, :production do
+        plugin :common_logger, $stderr
+      end
+
+      # Setup Cacheing mechanism
+      configure :development do
+        use Rack::Cache,
+            verbose: true,
+            metastore: 'file:_cache/rack/meta',
+            entitystore: 'file:_cache/rack/body'
+      end
+
+      configure :production do
+        use Rack::Cache,
+            verbose: true,
+            metastore: "#{config.REDIS_URL}/0/metastore",
+            entitystore: "#{config.REDIS_URL}/0/entitystore"
+      end
+
+      # Automated HTTP stubbing for testing only
+      configure :app_test do
+        require_relative '../spec/helpers/vcr_helper'
+        VcrHelper.setup_vcr
+        VcrHelper.configure_vcr_for_github(recording: :none)
       end
 
       # Database Setup

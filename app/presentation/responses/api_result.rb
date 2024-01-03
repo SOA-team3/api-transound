@@ -3,7 +3,7 @@
 module TranSound
   module Response
     SUCCESS = Set.new(
-      %i[ok created processing]
+      %i[ok created processing no_content]
     ).freeze
 
     FAILURE = Set.new(
