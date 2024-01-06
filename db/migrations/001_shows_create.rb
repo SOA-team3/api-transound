@@ -11,7 +11,7 @@ Sequel.migration do
       String :publisher
       String :type
       String :show_url
-      # Hash :episodes
+      String :recent_episodes
 
       DateTime :created_at
       DateTime :updated_at

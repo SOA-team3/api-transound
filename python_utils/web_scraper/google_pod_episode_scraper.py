@@ -6,7 +6,7 @@ import os
 import sys
 
 
-def get_episode_query_url(soup, title):
+def get_episode_query_url(soup):
     podcast = soup.find('a', {'class':'jJ8Epb'})
     # print(podcast)
     episode_url = podcast.get('href')
@@ -49,16 +49,16 @@ soup = BeautifulSoup(requests.get(podcast_query_url).text, features="lxml")
 
 # Tests of save into data_storage path
 # This is the name of the episode
-title = 'test' # soup.find('a', {'class':'jJ8Epb'}).text
-# Create a new folder to contain podcasts from the same show
-if not os.path.exists(f'app/infrastructure/gateways/data_storage/{title}'):
-    os.mkdir(f'app/infrastructure/gateways/data_storage/{title}')
-else:
-    # print(f"The folder '{title}' already exists.")
-    pass
+# title = 'test' # soup.find('a', {'class':'jJ8Epb'}).text
+# # Create a new folder to contain podcasts from the same show
+# if not os.path.exists(f'app/infrastructure/gateways/data_storage/{title}'):
+#     os.mkdir(f'app/infrastructure/gateways/data_storage/{title}')
+# else:
+#     # print(f"The folder '{title}' already exists.")
+#     pass
 
 # main
-episode_url = get_episode_query_url(soup, title)
+episode_url = get_episode_query_url(soup)
 episode_name, audio_data_url = scrape_audio_data(episode_url)
 download_audio_data(episode_name, audio_data_url)
 

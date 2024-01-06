@@ -1,1 +1,0 @@
-This folder handles language-learning from translation

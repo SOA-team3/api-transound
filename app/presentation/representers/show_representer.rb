@@ -20,6 +20,7 @@ module TranSound
       property :publisher
       property :type
       property :show_url
+      property :recent_episodes
 
       link :self do
         "#{ENV.fetch('API_HOST', nil)}/api/v1/podcast_info/#{show_type}/#{show_id}"

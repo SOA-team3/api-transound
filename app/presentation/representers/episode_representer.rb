@@ -22,8 +22,15 @@ module TranSound
       property :type
       property :episode_url
       property :episode_mp3_url
+      property :podcast_length
       property :transcript
+      property :sentence_segments
       property :translation
+      property :difficulty_score
+      property :word_dict
+      property :difficult_words
+      property :moderate_words
+      property :easy_words
 
       link :self do
         "#{ENV.fetch('API_HOST', nil)}/api/v1/podcast_info/#{episode_type}/#{episode_id}"

@@ -76,18 +76,14 @@ module TranSound
         end
 
         def get
-          # puts "Temp_Token_CONFIG: #{@config}"
-          # if TokenTime.new(@config).time_difference_of_get_token >= 55
           if TokenTime.new(@temp_token_config).time_difference_of_get_token >= 55
             access_token = ApplyForNewTempToken.new(@client_id,
                                                     @client_secret).apply_for_new_temp_token
             # save the temp token
-            # SaveTempToken.new(@secret_path, @config).save_temp_token(access_token)
             SaveTempToken.new(@config, @temp_token_config).save_temp_token(access_token)
             return access_token
           end
 
-          # @config['spotify_temp_token']
           @temp_token_config['spotify_temp_token']
         end
       end
@@ -130,14 +126,7 @@ module TranSound
           @config['spotify_gettoken_time'] = @taipei_timezone.now.strftime('%Y%m%d%H%M%S')
           @config['spotify_temp_token'] = access_token
 
-          # Create a temporary config
-          # temp_config = YAML.safe_load_file(@secret_path)
-          # puts "Temp_Token_CONFIG: #{YAML.safe_load_file(@secret_path)}"
-          # @config['spotify_gettoken_time'] = @taipei_timezone.now.strftime('%Y%m%d%H%M%S')
-          # @config['spotify_temp_token'] = access_token
-
           # Save the updated YAML back to the file
-          # File.write(@secret_path, temp_config.to_yaml)
           File.write('config/temp_token.yml', @config.to_yaml)
         end
       end
@@ -166,24 +155,20 @@ module TranSound
   end
 end
 
-# EPISODE_TYPE = 'episodes'
-# EPISODE_ID = '7elPsgSqR0DjMvMyLKSiM8' # ID = '7vwvbU1pDkv0IuWPY8SZyz'
-# SHOW_TYPE = 'shows'
-# SHOW_ID = '5Vv32KtHB3peVZ8TeacUty'
-# MARKET = 'TW'
-# SECRET_PATH = 'config/secrets.yml'
-# CONFIG = YAML.safe_load_file(SECRET_PATH)
-# CLIENT_ID = CONFIG['test']['spotify_Client_ID']
-# CLIENT_SECRET = CONFIG['test']['spotify_Client_secret']
-# puts "CONFIG: #{CONFIG}"
+# test
+# require 'yaml'
+# config = YAML.safe_load_file('/home/brian/SOA_assignment/SOA2023_transound/monolith-transound/config/temp_token.yml')
+# temp_token = config['spotify_temp_token']
+# show_id = '5Vv32KtHB3peVZ8TeacUty'
+# shows = TranSound::Podcast::Api.new(temp_token).show_data('shows', show_id, 'TW')
+# recent_episodes = shows['episodes']['items'][0..5]
+# ep01 = recent_episodes[0]
 
-# TEMP_TOKEN = TranSound::Podcast::Api::Token.new(SECRET_PATH, CONFIG, CLIENT_ID, CLIENT_SECRET).get
-# puts "TEMP_TOKEN: #{TEMP_TOKEN}"
-
-# episode = TranSound::Podcast::Api.new(TEMP_TOKEN).episode_data(EPISODE_TYPE, EPISODE_ID, MARKET)
-# puts episode['description']
-
-# show = TranSound::Podcast::Api.new(TEMP_TOKEN).show_data(SHOW_TYPE, SHOW_ID, MARKET)
-# output = show['episodes']['items'][0]['html_description']
-
-# File.write('podcast_api_test_output.txt', output)
+# recent_n_episodes = []
+# episode_info_dict = {}
+# episode_info_dict['description'] = ep01['description']
+# episode_info_dict['name'] = ep01['name']
+# episode_info_dict['release_date'] = ep01['release_date']
+# episode_info_dict['language'] = ep01['language']
+# recent_n_episodes << episode_info_dict
+# puts recent_n_episodes
