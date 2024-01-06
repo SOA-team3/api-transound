@@ -10,7 +10,6 @@ module TranSound
 
       step :find_episode
       step :request_episode_worker
-      step :store_episode
 
       private
 
@@ -20,48 +19,43 @@ module TranSound
       PROCESS_ERR_EP = 'Could not process this episode'
 
       def find_episode(input)
+        @local_episode = false
         if (episode = episode_in_database(input))
           input[:local_episode] = episode
+          @local_episode = true
+          puts 'api, add_podcast_info.rb, have local episode'
         end
         Success(input)
       rescue StandardError => e
         Failure(Response::ApiResult.new(status: :not_found, message: e.to_s))
       end
 
+      def episode_in_database(input)
+        Repository::For.klass(Entity::Episode)
+          .find_podcast_info(input[:id])
+      end
+
       def request_episode_worker(input)
         puts 'add_podcast_info, request_episode_worker'
         config = App.config
 
-        TranSound::Podcast::Api::Token.new(config, config.spotify_Client_ID,
-                                           config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
+        temp_token = TranSound::Podcast::Api::Token.new(config, config.spotify_Client_ID,
+                                                        config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
 
-        # json = Representer::Episode.new(Response::Episode.new(origin_id:)).to_json
+        message = [temp_token, input[:id], input[:request_id]].to_json
+        puts "add_podcast_info, message: #{message}"
 
-        input[:remote_episode] =
-          Messaging::Queue.new(config.ADD_PODCAST_INFO_QUEUE_URL, config).send(input[:id])
-
-        Failure(Response::ApiResult.new(status: :processing, message: PROCESSING_MSG_EP))
+        if @local_episode # no need for episode worker
+          Success(Response::ApiResult.new(status: :created, message: input[:local_episode]))
+        else
+          Messaging::Queue.new(config.ADD_PODCAST_INFO_QUEUE_URL, config).send(message)
+          Failure(Response::ApiResult.new(
+                    status: :processing,
+                    message: { request_id: input[:request_id], msg: PROCESSING_MSG_EP }
+                  ))
+        end
       rescue StandardError
-        # log_error(e)
         Failure(Response::ApiResult.new(status: :internal_error, message: PROCESS_ERR_EP))
-      end
-
-      def store_episode(input)
-        episode =
-          if (podcast_info = input[:remote_episode])
-            Repository::For.entity(podcast_info).create(podcast_info)
-          else
-            input[:local_episode]
-          end
-        Success(Response::ApiResult.new(status: :created, message: episode))
-      rescue StandardError => e
-        App.logger.error e.backtrace.join("\n")
-        Failure(Response::ApiResult.new(status: :internal_error, message: DB_ERR_MSG))
-      end
-
-      def episode_in_database(input)
-        Repository::For.klass(Entity::Episode)
-          .find_podcast_info(input[:id])
       end
     end
 
@@ -143,7 +137,7 @@ module TranSound
 
     #   def store_episode(input)
     #     episode =
-    #       if (podcast_info = input[:remote_episode])
+    #       if (podcast_info = input[:remote_episode]) # if remote episode have things
     #         Repository::For.entity(podcast_info).create(podcast_info)
     #       else
     #         input[:local_episode]
