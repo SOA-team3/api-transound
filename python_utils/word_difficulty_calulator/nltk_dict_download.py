@@ -17,6 +17,9 @@ def download_corpora():
     Usage:
     download_corpora()
     """
+    # 添加您的 Heroku 應用程序目錄到 nltk.data.path
+    nltk.data.path.append("/app/.heroku/python/nltk_data")
+    
     nltk.download('stopwords')
     nltk.download('words')
     nltk.download('reuters')
