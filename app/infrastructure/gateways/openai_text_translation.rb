@@ -13,8 +13,6 @@ module TranSound
         def initialize(text, translate_language)
           @text = text
           @openai_api_key = App.config.OPENAI_API_KEY
-          puts "audio translation, #{@openai_api_key}"
-
           @translate_language = translate_language
           # Execute Python translating script
           @script_file = 'python_utils/translator/translate_openai.py'
