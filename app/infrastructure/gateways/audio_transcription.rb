@@ -12,7 +12,8 @@ module TranSound
       class OpenAIWhisper
         def initialize(audio_file_path, audio_file_name)
           @audio_file_path = "#{audio_file_path}#{audio_file_name}"
-          @openai_api_key = App.config['OPENAI_API_KEY']
+          @openai_api_key = App.config.OPENAI_API_KEY
+          puts "audio transcription, #{@openai_api_key}"
           # Execute Python OpenAIWhisper transcribing script
           @script_file = 'python_utils/transcriber/transcribe_openai.py'
         end
