@@ -5,8 +5,6 @@ require 'open3'
 require 'yaml'
 require_app
 
-SECRET = App.config
-
 module TranSound
   module Podcast
     module TranslatingUtils
@@ -14,7 +12,7 @@ module TranSound
       class OpenAITranslator
         def initialize(text, translate_language)
           @text = text
-          @openai_api_key = SECRET['test']['OPENAI_API_KEY']
+          @openai_api_key = App.config['OPENAI_API_KEY']
           @translate_language = translate_language
           # Execute Python translating script
           @script_file = 'python_utils/translator/translate_openai.py'
