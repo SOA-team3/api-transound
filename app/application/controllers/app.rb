@@ -22,7 +22,7 @@ module TranSound
 
     route do |routing|
       response['Content-Type'] = 'application/json'
-      Podcast::DownloaderUtils::NLTKPretrainedModel.new.download
+      # Podcast::DownloaderUtils::NLTKPretrainedModel.new.download
 
       # GET /
       routing.root do
