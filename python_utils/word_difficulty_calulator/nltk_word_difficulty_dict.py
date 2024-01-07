@@ -4,7 +4,6 @@ from nltk.probability import FreqDist
 from textblob import Word as TextWord
 import string
 import sys
-import yaml
 import re
 
 class WordDifficulty:
