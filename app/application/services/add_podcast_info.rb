@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'dry/transaction'
+require_app
 
 module TranSound
   module Service
@@ -48,6 +49,7 @@ module TranSound
         if @local_episode # no need for episode worker
           Success(Response::ApiResult.new(status: :created, message: input[:local_episode]))
         else
+          puts "message, queue #{config.ADD_PODCAST_INFO_QUEUE_URL}"
           Messaging::Queue.new(config.ADD_PODCAST_INFO_QUEUE_URL, config).send(message)
           Failure(Response::ApiResult.new(
                     status: :processing,
