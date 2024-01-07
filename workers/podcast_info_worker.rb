@@ -19,7 +19,7 @@ module EpisodeInfo
     # Environment variables setup
     Figaro.application = Figaro::Application.new(
       environment: ENV['RACK_ENV'] || 'development',
-      path: File.expand_path('config/secrets.yml')
+      path: App.config
     )
     Figaro.load
     def self.config = Figaro.env
@@ -52,6 +52,7 @@ module EpisodeInfo
 
 
       job = JobReporter.new(request, EpisodeWorker.config)
+      puts "worker, config: #{EpisodeWorker.config}"
 
 
       job.report_each_second(3) { PodcastInfoMonitor.starting_percent }

@@ -13,6 +13,7 @@ module EpisodeInfo
     def publish(message)
       print "Progress: #{message} "
       print "[post: #{@config.API_HOST}/faye] "
+      puts "progress_publisher #{@config}, #{@config.API_HOST}"
       response = HTTP.headers(content_type: 'application/json')
         .post(
           "#{@config.API_HOST}/faye",
