@@ -5,7 +5,7 @@ bs4
 wget # to download files
 
 # Data Preprocessing
-openai
+openai==1.6.1
 pandas
 
 # Whisper transcribe package
