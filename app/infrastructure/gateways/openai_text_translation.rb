@@ -3,6 +3,7 @@
 # Open3 library to execute Python script
 require 'open3'
 require 'yaml'
+require_app
 
 SECRET = App.config
 
