@@ -3,6 +3,6 @@
 module TranSound
   module Response
     # List of episodes
-    EpisodesView = Struct.new(:episodes)
+    EpisodesList = Struct.new(:episodes)
   end
 end

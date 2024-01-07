@@ -3,6 +3,6 @@
 module TranSound
   module Response
     # List of shows
-    ShowsView = Struct.new(:shows)
+    ShowsList = Struct.new(:shows)
   end
 end
