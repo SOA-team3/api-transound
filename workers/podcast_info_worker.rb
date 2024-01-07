@@ -19,7 +19,7 @@ module EpisodeInfo
     # Environment variables setup
     Figaro.application = Figaro::Application.new(
       environment: ENV['RACK_ENV'] || 'development',
-      path: App.config
+      path: File.expand_path('config/secrets.yml')
     )
     Figaro.load
     def self.config = Figaro.env
