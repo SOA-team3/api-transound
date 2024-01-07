@@ -2,6 +2,7 @@
 
 require 'json'
 require 'net/http'
+require_app
 
 module TranSound
   module Podcast
@@ -31,7 +32,7 @@ module TranSound
           @episode = data
           @spot_token = token
           @gateway_class = gateway_class
-          @config = SECRET
+          @config = App.config
         end
 
         def build_entity
