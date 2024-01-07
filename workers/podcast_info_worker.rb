@@ -55,7 +55,7 @@ module EpisodeInfo
       puts "worker, config: #{EpisodeWorker.config}"
 
 
-      job.report_each_second(3) { PodcastInfoMonitor.starting_percent }
+      job.report_each_second(10) { PodcastInfoMonitor.starting_percent }
 
 
       result = TranSound::Podcast::EpisodeMapper
@@ -63,13 +63,13 @@ module EpisodeInfo
         .find('episodes', job.id, 'TW')
 
 
-      job.report_each_second(3) { PodcastInfoMonitor.mapper_done }
+      job.report_each_second(10) { PodcastInfoMonitor.mapper_done }
 
 
       TranSound::Repository::For.entity(result).create(result)
 
 
-      job.report_each_second(5) { PodcastInfoMonitor.finished_percent }
+      job.report_each_second(15) { PodcastInfoMonitor.finished_percent }
     rescue StandardError => e
       puts "Error in perform: #{e.message}"
       puts e.backtrace.join("\n")
