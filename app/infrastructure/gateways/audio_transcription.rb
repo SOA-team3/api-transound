@@ -4,7 +4,7 @@
 require 'open3'
 require 'yaml'
 
-SECRET = YAML.safe_load_file('config/secrets.yml')
+SECRET = App.config
 
 module TranSound
   module Podcast
