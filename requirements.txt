@@ -14,7 +14,7 @@ pandas
 # Speech_recognition transcribe package
 SpeechRecognition
 # googletrans==4.0.0-rc1
-googletrans
+# googletrans
 translate
 pydub
 ffmpeg-python
