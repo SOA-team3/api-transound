@@ -2,8 +2,8 @@
 
 module TranSound
   module Mapper
-    # Learning scores parsing and reporting services?
-    class LearningScores
+    # Difficulty scores parsing and reporting services?
+    class DifficultyScores
       def initialize(transcript)
         @transcript = transcript
       end

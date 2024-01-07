@@ -16,6 +16,7 @@ module TranSound
 
     route do |routing|
       response['Content-Type'] = 'application/json'
+      Podcast::DownloaderUtils::NLTKPretrainedModel.new.download
 
       # GET /
       routing.root do
@@ -38,10 +39,7 @@ module TranSound
 
               TranSound::Podcast::Api::Token.new(App.config, App.config.spotify_Client_ID,
                                                  App.config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
-              puts TEMP_TOKEN_CONFIG
-
-              puts "api, app.rb: #{type}"
-              puts "api, app.rb: #{id}"
+              puts "api, app.rb, temp token: #{TEMP_TOKEN_CONFIG}"
 
               path_request = Request::PodcastInfoPath.new(
                 type, id, request
@@ -77,8 +75,11 @@ module TranSound
             # POST /episode/id or /show/id
             routing.post do
               if type == 'episode'
+                request_id = [request.env, request.path, Time.now.to_f].hash
+
                 result = Service::AddEpisode.new.call(
-                  type:, id:
+                  type:, id:,
+                  request_id:
                 )
               elsif type == 'show'
                 result = Service::AddShow.new.call(

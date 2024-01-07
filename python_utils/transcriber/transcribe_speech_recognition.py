@@ -5,6 +5,9 @@ import os
 from googletrans import Translator
 import sys
 
+# Concurrency method
+import threading
+
 def audio_to_text(file_path):
     recognizer = sr.Recognizer()
     with sr.AudioFile(file_path) as source:
@@ -14,13 +17,13 @@ def audio_to_text(file_path):
     text = recognizer.recognize_google(audio_data, language=lang)
     return text
 
-#Get Ruby Input
+# Get Ruby Input
 mp3_file_path = sys.stdin.read()
 # mp3_file_path = "app/domain/audio_datas/data_storage/audio_test_data/"
 # mp3_file_name = "These Tiny Pollinators Can Travel Surprisingly Huge Distances.mp3"
 mp3_file_path = mp3_file_path.split('\n')[0]
 
-# 將MP3文件轉換成AudioSegment對象
+# 將MP3文件轉換成 AudioSegment 對象
 audio = AudioSegment.from_file(mp3_file_path, format="mp3")
 
 # 設定每個片段的長度（秒）
@@ -29,9 +32,13 @@ segment_length_sec = 15
 # 計算片段數量
 total_segments = len(audio) // (segment_length_sec * 1000)
 
-# 對每個片段進行處理
+# 對每個片段進行並行/並發處理
 TEXT = ''
-for i in range(total_segments):
+def audio_segment_to_TEXT(i):
+    global audio
+    global segment_length_sec
+    global TEXT
+
     start_time = i * segment_length_sec * 1000
     end_time = min((i + 1) * segment_length_sec * 1000, len(audio))
     segment = audio[start_time:end_time]
@@ -50,6 +57,16 @@ for i in range(total_segments):
 
     # 刪除臨時檔案
     os.remove(temp_file_path)
+
+# Multi-threading
+t_list = []
+for i in range(total_segments):
+    audio_segment_to_TEXT(i)
+    t_list.append(
+    threading.Thread(target=audio_segment_to_TEXT, args=(i, )))
+    t_list[i].start()
+for i in t_list:
+    i.join()
 
 # Translate the text
 def text_translate(text, translate_language):

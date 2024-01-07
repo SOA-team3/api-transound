@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'dry-types'
+require 'dry-struct'
+
 module TranSound
   module Repository
     # Repository for Shows
@@ -47,12 +50,13 @@ module TranSound
         return nil unless db_record
 
         Entity::Show.new(id: db_record.id, origin_id: db_record.origin_id,
-                         description: db_record.description,
-                         name: db_record.name,
+                         description: db_record.description, name: db_record.name,
                          images: db_record.images,
                          publisher: db_record.publisher,
                          type: db_record.type,
-                         show_url: db_record.show_url)
+                         show_url: db_record.show_url,
+                         recent_episodes: db_record.recent_episodes
+                        )
       end
 
       def self.rebuild_many(db_records)

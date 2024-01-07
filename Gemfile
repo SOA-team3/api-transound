@@ -40,6 +40,8 @@ gem 'http', '~> 5.1'
 
 # data preprocessing
 gem 'json'
+gem 'microsoft_translator'
+gem 'punkt-segmenter' # for Sentence Segmenation
 gem 'tzinfo'
 gem 'yaml'
 

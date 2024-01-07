@@ -17,14 +17,15 @@ module TranSound
       attribute :publisher, Strict::String
       attribute :type, Strict::String
       attribute :show_url, Strict::String
-      # attribute :episodes, Strict::Hash
+      attribute :recent_episodes, Strict::String.optional # Strict::String # Hash-like Array
 
       def show_num?
         top > 10
       end
 
       def to_attr_hash
-        to_hash.except(:id, :episodes)
+        # to_hash.except(:id, :episodes)
+        to_hash.except(:id)
       end
     end
   end
