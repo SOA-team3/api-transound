@@ -58,6 +58,8 @@ def audio_segment_to_TEXT(i):
     # 刪除臨時檔案
     os.remove(temp_file_path)
 
+# Concurrency method
+import threading
 # Multi-threading
 t_list = []
 for i in range(total_segments):

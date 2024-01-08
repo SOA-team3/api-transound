@@ -17,7 +17,7 @@ module TranSound
             # 初始化 Punkt::SentenceTokenizer
             tokenizer = Punkt::SentenceTokenizer.new(text_without_laughter_music)
             # 取得斷句結果
-            sentences = tokenizer.sentences_from_text(text_without_laughter_music, :output => :sentences_text)
+            tokenizer.sentences_from_text(text_without_laughter_music, :output => :sentences_text)
         end
       end
     end
