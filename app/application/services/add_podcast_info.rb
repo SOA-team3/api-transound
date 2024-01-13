@@ -37,27 +37,23 @@ module TranSound
       end
 
       def request_episode_worker(input)
-        puts 'add_podcast_info, request_episode_worker'
         config = App.config
-
         temp_token = TranSound::Podcast::Api::Token.new(config, config.spotify_Client_ID,
                                                         config.spotify_Client_secret, TEMP_TOKEN_CONFIG).get
-
         message = [temp_token, input[:id], input[:request_id]].to_json
-        puts "add_podcast_info, message: #{message}"
+        check_if_need_worker(input, config, message)
+      rescue StandardError
+        Failure(Response::ApiResult.new(status: :internal_error, message: PROCESS_ERR_EP))
+      end
 
+      def check_if_need_worker(input, config, message)
         if @local_episode # no need for episode worker
           Success(Response::ApiResult.new(status: :created, message: input[:local_episode]))
         else
-          puts "message, queue #{config.ADD_PODCAST_INFO_QUEUE_URL}"
           Messaging::Queue.new(config.ADD_PODCAST_INFO_QUEUE_URL, config).send(message)
-          Failure(Response::ApiResult.new(
-                    status: :processing,
-                    message: { request_id: input[:request_id], msg: PROCESSING_MSG_EP }
-                  ))
+          Failure(Response::ApiResult.new(status: :processing,
+                                          message: { request_id: input[:request_id], msg: PROCESSING_MSG_EP }))
         end
-      rescue StandardError
-        Failure(Response::ApiResult.new(status: :internal_error, message: PROCESS_ERR_EP))
       end
     end
 

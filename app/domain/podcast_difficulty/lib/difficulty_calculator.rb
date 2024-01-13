@@ -42,8 +42,6 @@ module TranSound
           {}
         end
       end
-
     end
   end
 end
-

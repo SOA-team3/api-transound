@@ -15,15 +15,11 @@ module TranSound
         puts 'infrastucture/queue initialized'
         @queue_url = queue_url
         sqs = Aws::SQS::Client.new(
-          access_key_id: config.AWS_ACCEsSS_KEY_ID,
+          access_key_id: config.AWS_ACCESS_KEY_ID,
           secret_access_key: config.AWS_SECRET_ACCESS_KEY,
           region: config.AWS_REGION
         )
         @queue = Aws::SQS::Queue.new(url: @queue_url, client: sqs)
-        puts "queue_url: #{@queue_url},
-        access_key_id: #{config.AWS_ACCESS_KEY_ID},
-        secret_access_key: #{config.AWS_SECRET_ACCESS_KEY},
-        region: #{config.AWS_REGION}"
       end
 
       ## Sends message to queue

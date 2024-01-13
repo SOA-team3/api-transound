@@ -12,12 +12,12 @@ module TranSound
         end
 
         def segment
-            # 移除 "LAUGHTER" 和 "MUSIC"
-            text_without_laughter_music = @text.gsub(/LAUGHTER|MUSIC|/, '')
-            # 初始化 Punkt::SentenceTokenizer
-            tokenizer = Punkt::SentenceTokenizer.new(text_without_laughter_music)
-            # 取得斷句結果
-            tokenizer.sentences_from_text(text_without_laughter_music, :output => :sentences_text)
+          # 移除 "LAUGHTER" 和 "MUSIC"
+          text_without_laughter_music = @text.gsub(/LAUGHTER|MUSIC|/, '')
+          # 初始化 Punkt::SentenceTokenizer
+          tokenizer = Punkt::SentenceTokenizer.new(text_without_laughter_music)
+          # 取得斷句結果
+          tokenizer.sentences_from_text(text_without_laughter_music, output: :sentences_text)
         end
       end
     end

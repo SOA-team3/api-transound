@@ -19,12 +19,20 @@ Metrics/BlockLength:
     - 'app/controllers/app.rb'
     - 'app/application/controllers/**/*.rb'
     - spec/**/*
+    - 'db/migrations/002_episodes_create.rb'
+    - 'config/environment.rb'
 
 # ignore method length in rebuilding entity only
 Metrics/MethodLength:
   Enabled: true
   Exclude:
     - 'app/models/repositories/episodes.rb'
+
+# ignore class length in controllers/app.rb
+Metrics/ClassLength:
+  Enabled: true
+  Exclude:
+    - 'app/application/controllers/app.rb'
 
 # See: https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Layout/MultilineMethodCallIndentation
 Layout/MultilineMethodCallIndentation:
@@ -40,3 +48,11 @@ Style/RedundantAssignment:
   Enabled: true
   Exclude:
     - 'app/domain/audio_datas/entities/audio_data.rb'
+
+Style/OpenStructUse:
+  Enabled: true
+  Exclude:
+    - 'app/application/controllers/app.rb'
+    - 'app/presentation/representers/episodes_view.rb'
+    - 'app/presentation/representers/openstruct_with_links.rb'
+    - 'app/presentation/representers/shows_view.rb'

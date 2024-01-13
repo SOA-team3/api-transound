@@ -55,8 +55,7 @@ module TranSound
                          publisher: db_record.publisher,
                          type: db_record.type,
                          show_url: db_record.show_url,
-                         recent_episodes: db_record.recent_episodes
-                        )
+                         recent_episodes: db_record.recent_episodes)
       end
 
       def self.rebuild_many(db_records)

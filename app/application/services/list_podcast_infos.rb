@@ -1,25 +1,19 @@
 # frozen_string_literal: true
 
-
 require 'dry/monads'
-
 
 module TranSound
   module Service
     DB_ERR = 'Could not access database'
 
-
     # Retrieves array of all listed episode entities
     class ListEpisodes
       include Dry::Transaction
 
-
       step :validate_list
       step :retrieve_episodes
 
-
       private
-
 
       # Expects list of movies in input[:list_request]
       def validate_list(input)
@@ -31,7 +25,6 @@ module TranSound
           Failure(list_request.failure)
         end
       end
-
 
       def retrieve_episodes(input)
         puts "retrieve_shows run #{input[:list]}"
@@ -47,18 +40,14 @@ module TranSound
       end
     end
 
-
     # Retrieves array of all listed show entities
     class ListShows
       include Dry::Transaction
 
-
       step :validate_list
       step :retrieve_shows
 
-
       private
-
 
       # Expects list of movies in input[:list_request]
       def validate_list(input)
@@ -70,7 +59,6 @@ module TranSound
           Failure(list_request.failure)
         end
       end
-
 
       def retrieve_shows(input)
         puts "retrieve_shows run #{input[:list]}"

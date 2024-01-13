@@ -84,7 +84,7 @@ module TranSound
           end
 
           # Transfer Hash-Array into String by Json module
-          json_string = JSON.generate(recent_n_episodes)
+          JSON.generate(recent_n_episodes)
           # puts "show_mapper json_string.class: #{json_string.class}"
           # json_string
         end

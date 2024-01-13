@@ -90,7 +90,8 @@ module TranSound
           audio_file_name = "#{name}.mp3"
 
           # TranSound::Podcast::TranscribingUtils::SpeechRecognition.new(audio_file_path, audio_file_name).transcribe
-          transcript = TranSound::Podcast::TranscribingUtils::OpenAIWhisper.new(audio_file_path, audio_file_name).transcribe
+          transcript = TranSound::Podcast::TranscribingUtils::OpenAIWhisper.new(audio_file_path,
+                                                                                audio_file_name).transcribe
           # transcript = <<-EOF
           #   I've got a big family, cos I had older brothers and sisters, and they all had loads of kids, and their kids have had loads of kids, and their kids have had loads of kids, cos we're chavs, basically.
           #   There's a new baby every Christmas.
@@ -121,7 +122,8 @@ module TranSound
           sentences = JSON.parse(sentence_segments)
           translate_sentences = []
           sentences.each do |sentence|
-            translate_sentences << TranSound::Podcast::TranslatingUtils::OpenAITranslator.new(sentence.strip, translate_language).translate
+            translate_sentences << TranSound::Podcast::TranslatingUtils::OpenAITranslator.new(sentence.strip,
+                                                                                              translate_language).translate
             # translate_sentences << TranSound::Podcast::TranslatingUtils::Translator.new(sentence.strip, translate_language).translate
           end
           translate_sentences.to_json
@@ -153,7 +155,6 @@ module TranSound
           easy_dict = TranSound::Value::Scoring.new(@words_difficulty_dict).easy_dict
           easy_dict.to_json
         end
-
       end
     end
   end

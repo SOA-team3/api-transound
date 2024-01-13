@@ -25,7 +25,6 @@ module TranSound
           end
           # Must return again for the value of translate method
         end
-
       end
     end
   end
