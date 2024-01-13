@@ -1,0 +1,42 @@
+---
+# Apply latest Ruby style guide and newly introduced cops
+AllCops:
+  TargetRubyVersion: 3.2
+  NewCops: enable
+  Exclude:
+    - '_snippets/**/*'
+  Include:
+  - 'Gemfile'
+  - 'Rakefile'
+  - '**/*.rb'
+
+# ignore block length in test code only
+Metrics/BlockLength:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*'
+    - 'rakefile.rb'
+    - 'app/controllers/app.rb'
+    - 'app/application/controllers/**/*.rb'
+    - spec/**/*
+
+# ignore method length in rebuilding entity only
+Metrics/MethodLength:
+  Enabled: true
+  Exclude:
+    - 'app/models/repositories/episodes.rb'
+
+# See: https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Layout/MultilineMethodCallIndentation
+Layout/MultilineMethodCallIndentation:
+  Enabled: true
+  EnforcedStyle: indented
+
+Style/HashSyntax:
+  Enabled: true
+  Exclude:
+    - 'Rakefile'
+
+Style/RedundantAssignment:
+  Enabled: true
+  Exclude:
+    - 'app/domain/audio_datas/entities/audio_data.rb'

@@ -1,0 +1,25 @@
+# Web Crawling
+lxml
+requests
+bs4
+wget # to download files
+
+# Data Preprocessing
+openai==1.6.1
+pandas
+
+# Whisper transcribe package
+# git+https://github.com/openai/whisper.git
+
+# Speech_recognition transcribe package
+SpeechRecognition
+# googletrans==4.0.0-rc1
+googletrans
+translate
+pydub
+ffmpeg-python
+ffmpeg
+
+# NLP
+nltk
+textblob
