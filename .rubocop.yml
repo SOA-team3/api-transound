@@ -1,0 +1,82 @@
+---
+# Apply latest Ruby style guide and newly introduced cops
+AllCops:
+  TargetRubyVersion: 3.2
+  NewCops: enable
+  Exclude:
+    - '_snippets/**/*'
+  Include:
+  - 'Gemfile'
+  - 'Rakefile'
+  - '**/*.rb'
+
+# ignore block length in test code only
+Metrics/BlockLength:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*'
+    - 'rakefile.rb'
+    - 'app/controllers/app.rb'
+    - 'app/application/controllers/**/*.rb'
+    - spec/**/*
+    - 'db/migrations/002_episodes_create.rb'
+    - 'config/environment.rb'
+
+# ignore method length in rebuilding entity only
+Metrics/MethodLength:
+  Enabled: true
+  Exclude:
+    - 'app/models/repositories/episodes.rb'
+    - 'app/domain/podcast_info/mappers/show_mapper.rb'
+
+# ignore class length in controllers/app.rb
+Metrics/ClassLength:
+  Enabled: true
+  Exclude:
+    - 'app/application/controllers/app.rb'
+
+# See: https://www.rubydoc.info/gems/rubocop/RuboCop/Cop/Layout/MultilineMethodCallIndentation
+Layout/MultilineMethodCallIndentation:
+  Enabled: true
+  EnforcedStyle: indented
+
+Style/HashSyntax:
+  Enabled: true
+  Exclude:
+    - 'Rakefile'
+
+Style/RedundantAssignment:
+  Enabled: true
+  Exclude:
+    - 'app/domain/audio_datas/entities/audio_data.rb'
+
+Style/OpenStructUse:
+  Enabled: true
+  Exclude:
+    - 'app/application/controllers/app.rb'
+    - 'app/presentation/representers/episodes_view.rb'
+    - 'app/presentation/representers/openstruct_with_links.rb'
+    - 'app/presentation/representers/shows_view.rb'
+
+# ignore line length for testing text words
+Layout/LineLength:
+  Enabled: true
+  Exclude:
+    - 'app/infrastructure/gateways/word_difficulty.rb'
+    - 'app/infrastructure/gateways/text_segmentation.rb'
+    - 'app/infrastructure/gateways/openai_text_translation.rb'
+    - 'app/infrastructure/gateways/audio_translation.rb'
+    - 'app/infrastructure/gateways/audio_transcription.rb'
+    - 'app/domain/podcast_info/repositories/episodes.rb'
+    - 'app/domain/podcast_info/mappers/episode_mapper.rb'
+    - 'app/domain/podcast_difficulty/lib/difficulty_calculator.rb'
+    - 'app/domain/podcast_difficulty/entities/difficulty_scores.rb'
+
+# ignore Metrics AbcSize for domain/podcast_info/repositories/episodes.rb
+Metrics/AbcSize:
+  Enabled: true
+  Exclude:
+    - 'app/domain/podcast_info/repositories/episodes.rb'
+    - 'app/domain/podcast_info/mappers/episode_mapper.rb'
+    - 'app/domain/podcast_difficulty/values/scoring.rb'
+

@@ -1,0 +1,20 @@
+---
+  detectors:
+    IrresponsibleModule:
+      enabled: false
+    UncommunicativeVariableName:
+      enabled: true
+
+  # overrides:
+  #   - files:
+  #       - app/application/services/add_podcast_info.rb
+  #   - detectors:
+  #       UncommunicativeVariableName:
+  #         enabled: false
+
+  exclude_paths:
+    - _snippets
+    - spec/fixtures/project_info.rb # one-time test fixture creator
+    # configuration and helper files do not need to be considered
+    - spec/helpers/database_helper.rb
+    - spec/helpers/vcr_helper.rb
