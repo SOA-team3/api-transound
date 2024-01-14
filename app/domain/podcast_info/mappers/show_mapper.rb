@@ -78,7 +78,8 @@ module TranSound
               'release_date' => episode['release_date'],
               'name' => episode['name'],
               'description' => episode['description'],
-              'language' => episode['language']
+              'language' => episode['language'],
+              'id' => episode['id']
             }
           end
 
