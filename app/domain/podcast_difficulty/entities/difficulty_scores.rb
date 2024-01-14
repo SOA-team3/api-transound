@@ -1,29 +1,32 @@
 # frozen_string_literal: true
 
 require_relative '../lib/difficulty_calculator'
+require_relative '../mappers/difficulty_scores_mapper'
 
 module TranSound
   module Entity
     # Entity for different scorings of a transcript
     class DifficultyScores
       include Mixins::DifficultyCalculator
+      include Mapper
 
       attr_reader :transcript
 
       def initialize(transcript)
         @transcript = transcript
+        @t = TranSound::Mapper::DifficultyScores.new(@transcript)
       end
 
       def words_array
-        word_split(@transcript)
+        @t.word_split(@transcript)
       end
 
       def words_difficulty_dict_by_words_array
-        words_difficulty_calculate(words_array)
+        @t.words_difficulty_calculate(words_array)
       end
 
       def words_difficulty_dict_by_transcript
-        words_difficulty_dict_create(@transcript)
+        @t.words_difficulty_dict_create(@transcript)
       end
     end
   end

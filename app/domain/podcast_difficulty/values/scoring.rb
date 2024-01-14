@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../lib/difficulty_calculator'
+require_relative '../mappers/difficulty_scores_mapper'
 require_relative '../entities/difficulty_scores'
 require 'yaml'
 
