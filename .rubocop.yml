@@ -27,6 +27,7 @@ Metrics/MethodLength:
   Enabled: true
   Exclude:
     - 'app/models/repositories/episodes.rb'
+    - 'app/domain/podcast_info/mappers/show_mapper.rb'
 
 # ignore class length in controllers/app.rb
 Metrics/ClassLength:
@@ -56,3 +57,26 @@ Style/OpenStructUse:
     - 'app/presentation/representers/episodes_view.rb'
     - 'app/presentation/representers/openstruct_with_links.rb'
     - 'app/presentation/representers/shows_view.rb'
+
+# ignore line length for testing text words
+Layout/LineLength:
+  Enabled: true
+  Exclude:
+    - 'app/infrastructure/gateways/word_difficulty.rb'
+    - 'app/infrastructure/gateways/text_segmentation.rb'
+    - 'app/infrastructure/gateways/openai_text_translation.rb'
+    - 'app/infrastructure/gateways/audio_translation.rb'
+    - 'app/infrastructure/gateways/audio_transcription.rb'
+    - 'app/domain/podcast_info/repositories/episodes.rb'
+    - 'app/domain/podcast_info/mappers/episode_mapper.rb'
+    - 'app/domain/podcast_difficulty/lib/difficulty_calculator.rb'
+    - 'app/domain/podcast_difficulty/entities/difficulty_scores.rb'
+
+# ignore Metrics AbcSize for domain/podcast_info/repositories/episodes.rb
+Metrics/AbcSize:
+  Enabled: true
+  Exclude:
+    - 'app/domain/podcast_info/repositories/episodes.rb'
+    - 'app/domain/podcast_info/mappers/episode_mapper.rb'
+    - 'app/domain/podcast_difficulty/values/scoring.rb'
+

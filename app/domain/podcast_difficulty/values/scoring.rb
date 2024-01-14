@@ -37,7 +37,10 @@ module TranSound
       def podcast_difficult_score
         total_difficulty_length = @words_difficulty_dict.length - unclassified_dict.length
         puts "total_difficulty_length: #{total_difficulty_length}"
-        difficulty_weight = (difficult_dict.length * DIFFICULT_WEIGHT) + (moderate_dict.length * MODERATE_WEIGHT) + (easy_dict.length * EASY_WEIGHT)
+        d_lxd_w = (difficult_dict.length * DIFFICULT_WEIGHT)
+        m_lxm_w = (moderate_dict.length * MODERATE_WEIGHT)
+        e_lxe_w = (easy_dict.length * EASY_WEIGHT)
+        difficulty_weight = d_lxd_w + m_lxm_w + e_lxe_w
         puts "difficulty_weight: #{difficulty_weight}"
         100 * difficulty_weight.to_f / (total_difficulty_length * DIFFICULT_WEIGHT)
       end
