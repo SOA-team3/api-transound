@@ -1,1 +1,0 @@
-This folder holds queried audio data(podcast show name) for testing temporarily.
